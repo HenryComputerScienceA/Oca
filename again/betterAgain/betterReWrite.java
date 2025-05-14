@@ -11,7 +11,7 @@ public class betterReWrite {
   
   // keywords
   static HashMap<String, String> variableStorage = new HashMap<String, String>();
-  static String[] variables = {"string", "int", "Lswitch"};
+  static String[] variables = {"assign"};
   static int variableExpect = 3;
 
   // control flow
@@ -118,7 +118,7 @@ public class betterReWrite {
 
     if (line.length == consoleCommExpect) {
 
-      String result = (variableStorage.containsKey(line[1])) ? line[1] : line[1];
+      String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
       System.out.println(result);
 
     } else {
@@ -127,9 +127,76 @@ public class betterReWrite {
 
   }
 
-  public static void handleMath(String[] line) {
+  public static void handleMath(String[] line) { // example: add (new variable name) -> (var1) (var2)
 
+    String newVariableName = line[1];
 
+    String sVar1 = line[3];
+    String sVar2 = line[4];
+
+    if (line.length == mathExpect) {
+
+      if (line[0].equals(mathKeywords[0]) && line[2].equals("->")) {
+
+        //System.out.println("user wants to add");
+
+        if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+          int var1 = Integer.parseInt(variableStorage.get(sVar1));
+          int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+          variableStorage.put(newVariableName, String.valueOf(var1 + var2));
+          System.out.println("variableStorage after addition: " + variableStorage);
+
+        }
+
+      } else if (line[0].equals(mathKeywords[1])) { // subtract
+
+        //System.out.println("user wants to subtract");
+
+        if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+          int var1 = Integer.parseInt(variableStorage.get(sVar1));
+          int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+          variableStorage.put(newVariableName, String.valueOf(var1 - var2));
+          System.out.println("variableStorage after addition: " + variableStorage);
+
+        }
+
+      } else if (line[0].equals(mathKeywords[2])) { // divide
+
+        //System.out.println("user wants to divide");
+
+        if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+          int var1 = Integer.parseInt(variableStorage.get(sVar1));
+          int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+          variableStorage.put(newVariableName, String.valueOf(var1 / var2));
+          System.out.println("variableStorage after addition: " + variableStorage);
+
+        }
+
+      } else if (line[0].equals(mathKeywords[3])) { // multiply
+
+        //System.out.println("user wants to multiply");
+
+        if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+          int var1 = Integer.parseInt(variableStorage.get(sVar1));
+          int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+          variableStorage.put(newVariableName, String.valueOf(var1 * var2));
+          System.out.println("variableStorage after addition: " + variableStorage);
+
+        }
+
+      }
+
+    } else {
+      System.out.println("invalid math declaration on line: " + Arrays.toString(line));
+    }
 
   }
 

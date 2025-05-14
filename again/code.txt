@@ -1,6 +1,14 @@
-int x 4
-int y 5
+assign x 100
+assign y 10
 
-print ----------
+add a -> x y
+print a
 
-add r -> x y
+sub s -> x y
+print s
+
+div d -> x y
+print d
+
+mul m -> x y
+print m
