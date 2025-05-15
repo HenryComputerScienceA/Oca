@@ -16,7 +16,7 @@ public class betterReWrite {
 
   // control flow
   static String[] controlFlow = {"con"};
-  static int controlExpect = 5;
+  static int controlExpect = 5; // example: con var1 *symbol* var2 > *inner text* <
   static String[] allowedComparisons = {"same"/*=*/, "not"/*!=*/, "more"/*>*/, "less"/*<*/};
 
   // talking with the console
@@ -27,6 +27,12 @@ public class betterReWrite {
   static String[] mathKeywords = {"add", "sub", "div", "mul"};
   static int mathExpect = 5; // example: add (new variable name) -> (var1) (var2)
                              // "->" is a spacer to make it easier to read
+
+  // logic holders
+  static String[] logicHolders = {"op"};
+  static int logicExpect = 2; // example: op name<> *inner text* end
+  static String[] methodCallers = {"call"};
+  static int methodCallExpect = 2; // example: call name<>
 
 
   public static void main(String[] args) {
@@ -115,6 +121,32 @@ public class betterReWrite {
                 for (String[] blockLine : blockLines) {
                   getGiver(blockLine);
                 }
+              }
+
+            }
+          }
+
+          // method detection
+          for (String o : logicHolders) {
+            if (o.equals(firstWord)) {
+              //System.out.println("firstWord wants to hold logic");
+
+              boolean stop = false;
+              ArrayList<String[]> blockLines = new ArrayList<>();
+
+              while (!stop && (line = reader.readLine()) != null) {
+                if (line.trim().equals("end")) {
+                  stop = true;
+                } else {
+                  String trimmedLine = line.trim();
+                  if (!trimmedLine.isEmpty()) {
+                    blockLines.add(trimmedLine.split(" "));
+                  }
+                }
+              }
+
+              for (String[] blockLine : blockLines) {
+                handleOps(blockLine);
               }
 
             }
@@ -266,6 +298,12 @@ public class betterReWrite {
 
     return isTrue;
     
+  }
+
+  public static void handleOps(String[] line) {
+
+    System.out.println("handle ops here");
+
   }
 
   public static void getGiver(String[] splitSpaces) {

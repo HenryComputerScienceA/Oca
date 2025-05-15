@@ -1,4 +1,11 @@
 assign > creating variables (example: assign x 4)
+
 print > printing to the console (example: print x)
+
 add, sub, div, mul > doing math (example: add (new variable name) -> (var1) (var2))
+
 con > if statements (example: con var1 *symbol* var2 > *inner text* <)
+
+op > methods (example: op name<> *inner text* end)
+
+call > call methods (example: call name<>)

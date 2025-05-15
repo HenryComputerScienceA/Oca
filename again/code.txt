@@ -4,4 +4,15 @@ assign y 10
 con x not y >
   mul n -> x y
   print n
+
+  assign l ----------
+  print l
+
+  call run<>
+
 <
+
+op run<>
+  div d -> x y
+  print d
+end
