@@ -1,14 +1,7 @@
 assign x 100
 assign y 10
 
-add a -> x y
-print a
-
-sub s -> x y
-print s
-
-div d -> x y
-print d
-
-mul m -> x y
-print m
+con x not y >
+  mul n -> x y
+  print n
+<

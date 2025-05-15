@@ -10,12 +10,14 @@ import java.util.HashMap;
 public class betterReWrite {
   
   // keywords
-  static HashMap<String, String> variableStorage = new HashMap<String, String>();
+  static HashMap<String, String> variableStorage = new HashMap<String, String>(); // store variables in here
   static String[] variables = {"assign"};
   static int variableExpect = 3;
 
   // control flow
-  static String[] controlFlow = {"if"};
+  static String[] controlFlow = {"con"};
+  static int controlExpect = 5;
+  static String[] allowedComparisons = {"same"/*=*/, "not"/*!=*/, "more"/*>*/, "less"/*<*/};
 
   // talking with the console
   static String[] consoleCommunication = {"print"};
@@ -31,9 +33,9 @@ public class betterReWrite {
     
     String line = "";
 
-    try {
+    try (BufferedReader reader = new BufferedReader(new FileReader("again/code.txt"));) {
 
-      BufferedReader reader = new BufferedReader(new FileReader("again/code.txt"));
+       // read the file with code in it
       
       while ((line = reader.readLine()) != null) {
         // split input into parts -> spaces, periods
@@ -81,9 +83,39 @@ public class betterReWrite {
 
           for (String m : mathKeywords) {
             if (m.equals(firstWord)) {
-              System.out.println("first word wants to do math");
+              //System.out.println("firstWord wants to do math");
 
               handleMath(splitSpaces);
+
+            }
+          }
+
+          for (String i : controlFlow) {
+            if (i.equals(firstWord)) {
+              //System.out.println("firstWord wants to control the flow");
+
+              boolean stop = false;
+              ArrayList<String[]> blockLines = new ArrayList<>();
+
+              while (!stop && (line = reader.readLine()) != null) {
+
+                if (line.trim().equals("<")) {
+                  stop = true;
+                } else {
+                  String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
+                  if (!trimmedLine.isEmpty()) {
+                    blockLines.add(trimmedLine.split(" "));
+                  }
+                }
+
+              }
+
+              // run block only if condition is true
+              if (handleControlFlow(splitSpaces)) {
+                for (String[] blockLine : blockLines) {
+                  getGiver(blockLine);
+                }
+              }
 
             }
           }
@@ -146,7 +178,7 @@ public class betterReWrite {
           int var2 = Integer.parseInt(variableStorage.get(sVar2));
 
           variableStorage.put(newVariableName, String.valueOf(var1 + var2));
-          System.out.println("variableStorage after addition: " + variableStorage);
+          //System.out.println("variableStorage after addition: " + variableStorage);
 
         }
 
@@ -160,7 +192,7 @@ public class betterReWrite {
           int var2 = Integer.parseInt(variableStorage.get(sVar2));
 
           variableStorage.put(newVariableName, String.valueOf(var1 - var2));
-          System.out.println("variableStorage after addition: " + variableStorage);
+          //System.out.println("variableStorage after addition: " + variableStorage);
 
         }
 
@@ -174,7 +206,7 @@ public class betterReWrite {
           int var2 = Integer.parseInt(variableStorage.get(sVar2));
 
           variableStorage.put(newVariableName, String.valueOf(var1 / var2));
-          System.out.println("variableStorage after addition: " + variableStorage);
+          //System.out.println("variableStorage after addition: " + variableStorage);
 
         }
 
@@ -188,7 +220,7 @@ public class betterReWrite {
           int var2 = Integer.parseInt(variableStorage.get(sVar2));
 
           variableStorage.put(newVariableName, String.valueOf(var1 * var2));
-          System.out.println("variableStorage after addition: " + variableStorage);
+          //System.out.println("variableStorage after addition: " + variableStorage);
 
         }
 
@@ -197,6 +229,96 @@ public class betterReWrite {
     } else {
       System.out.println("invalid math declaration on line: " + Arrays.toString(line));
     }
+
+  }
+
+  public static boolean handleControlFlow(String[] line) {
+    
+    //System.out.println("each line for con: " + Arrays.toString(line));
+
+    String var1 = variableStorage.get(line[1]);
+    String var2 = variableStorage.get(line[3]);
+
+    //System.out.println("v1: " + var1 + "v2: " + var2);
+
+    boolean isTrue = false;
+
+    if (var1 != null && var2 != null) { // check if var1 and var2 exist
+      try {
+        //System.out.println("both variables are numbers");
+        int v1I = Integer.parseInt(var1);
+        int v2I = Integer.parseInt(var2);
+
+        if (line[2].equals(allowedComparisons[0])) { // same "="
+          isTrue = (v1I == v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[1])) { // not "!="
+          isTrue = (v1I != v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[2])) { // more ">"
+          isTrue = (v1I > v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[3])) { // less "<"
+          isTrue = (v1I < v2I) ? true : false;
+        }
+      } catch (NumberFormatException e) {
+        // skip if not a number
+      }
+      
+    }
+
+    return isTrue;
+    
+  }
+
+  public static void getGiver(String[] splitSpaces) {
+
+    String firstWord = (splitSpaces[0].equals(null)) ? "" : splitSpaces[0];
+
+    for (String v : variables) {
+            if (v.equals(firstWord)) {
+              //System.out.println("firstWord is a variable");
+
+              handleVariables(splitSpaces);
+
+            }
+          }
+
+          for (String c : consoleCommunication) {
+            if (c.equals(firstWord)) {
+              //System.out.println("firstWord wants to talk to the console");
+
+              handleConsole(splitSpaces);
+
+            }
+          }
+
+          for (String m : mathKeywords) {
+            if (m.equals(firstWord)) {
+              //System.out.println("firstWord wants to do math");
+
+              handleMath(splitSpaces);
+
+            }
+          }
+
+          /* no support for nested if statements for now */
+
+          /*for (String i : controlFlow) {
+            if (i.equals(firstWord)) {
+              //System.out.println("firstWord wants to control the flow");
+
+              boolean stop = false;
+
+              while (!stop && (line = reader.readLine()) != null) {
+
+                if (line.equals("<")) {
+                  stop = true;
+                } else {
+                  handleControlFlow(splitSpaces);
+                }
+
+              }
+
+            }
+          }*/
 
   }
 
