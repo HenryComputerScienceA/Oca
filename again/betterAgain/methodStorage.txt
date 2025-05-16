@@ -1,0 +1,10 @@
+op newOp<>
+  sub s -> x y
+  print s
+  call run<>
+end
+op run<>
+  div d -> x y
+  print d
+  call newOp<>
+end

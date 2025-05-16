@@ -1,8 +1,6 @@
 package again.betterAgain;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,9 +31,17 @@ public class betterReWrite {
   static int logicExpect = 2; // example: op name<> *inner text* end
   static String[] methodCallers = {"call"};
   static int methodCallExpect = 2; // example: call name<>
+  static ArrayList<String> methodCallsStorage = new ArrayList<>();
 
 
   public static void main(String[] args) {
+
+    /* clears the file */
+    try (PrintWriter pw = new PrintWriter("again/betterAgain/methodStorage.txt")) {
+
+    } catch (IOException p) {
+      p.printStackTrace();
+    }
     
     String line = "";
 
@@ -134,20 +140,47 @@ public class betterReWrite {
               boolean stop = false;
               ArrayList<String[]> blockLines = new ArrayList<>();
 
+              handleOps(line);
+
               while (!stop && (line = reader.readLine()) != null) {
-                if (line.trim().equals("end")) {
+
+                /*if (line.trim().equals("end")) {
                   stop = true;
                 } else {
                   String trimmedLine = line.trim();
                   if (!trimmedLine.isEmpty()) {
                     blockLines.add(trimmedLine.split(" "));
                   }
+                }*/
+
+                if (line.equals("end")) {
+                  handleOps(line);
+                  stop = true;
+                } else {
+                  //System.out.println("ops line: " + line);
+                  handleOps(line);
                 }
+
               }
 
-              for (String[] blockLine : blockLines) {
+              /*for (String[] blockLine : blockLines) {
                 handleOps(blockLine);
-              }
+              }*/
+
+              
+
+            }
+          }
+          
+          for (String mc : methodCallers) {
+
+            String trimmedFirstWord = splitSpaces[0].trim();
+            //System.out.println("firstWord: " + trimmedFirstWord);
+
+            if (mc.equals(firstWord) || mc.equals(trimmedFirstWord)) {
+
+              methodCallsStorage.add(splitSpaces[1]);
+              //System.out.println("methodCallsStorage: " + methodCallsStorage);
 
             }
           }
@@ -160,6 +193,11 @@ public class betterReWrite {
         
     } catch (IOException e) {
       e.printStackTrace();
+    }
+
+    ArrayList<String> methodCallsCopy = new ArrayList<>(methodCallsStorage);
+    for (String rm : methodCallsCopy) {
+      runMethods(rm);
     }
   }
 
@@ -291,7 +329,7 @@ public class betterReWrite {
           isTrue = (v1I < v2I) ? true : false;
         }
       } catch (NumberFormatException e) {
-        // skip if not a number
+        // skip if not a numbers
       }
       
     }
@@ -300,9 +338,55 @@ public class betterReWrite {
     
   }
 
-  public static void handleOps(String[] line) {
+  public static void handleOps(String line) {
 
-    System.out.println("handle ops here");
+    //System.out.println("handle ops here");
+
+    File methodStorageFile = new File("again/betterAgain/methodStorage.txt");
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(methodStorageFile, true))) { // create a file writer
+      //System.out.println("trying to write to file: " + methodStorageFile);
+      bw.write(line);
+      bw.newLine();
+      
+    } catch (IOException w) {
+      w.printStackTrace();
+    }
+
+  }
+
+  public static void handleMethodCalling() {
+
+    System.out.println("handle method calling");
+
+    for (String cs : methodCallsStorage) {
+      runMethods(cs);
+    }
+
+  }
+
+  public static void runMethods(String method) {
+
+    //System.out.println("running methods");
+
+    String line = "";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader("again/betterAgain/methodStorage.txt"));) {
+
+      while ((line = reader.readLine()) != null) {
+
+        String lineTrim = line.trim();
+        String[] lineSpace = lineTrim.split(" ");
+
+        //System.out.println("method runner lineSpace: " + Arrays.toString(lineSpace));
+
+        getGiver(lineSpace);
+
+      }
+
+    } catch  (IOException mr) {
+      mr.printStackTrace();
+    }
 
   }
 
@@ -357,6 +441,21 @@ public class betterReWrite {
 
             }
           }*/
+
+    for (String mc : methodCallers) {
+
+            String trimmedFirstWord = splitSpaces[0].trim();
+            //System.out.println("firstWord: " + trimmedFirstWord);
+
+            if (mc.equals(firstWord) || mc.equals(trimmedFirstWord)) {
+
+              methodCallsStorage.add(splitSpaces[1]);
+              //System.out.println("methodCallsStorage: " + methodCallsStorage);
+
+            }
+          }
+          
+          
 
   }
 

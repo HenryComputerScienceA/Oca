@@ -1,6 +1,11 @@
 assign x 100
 assign y 10
 
+op newOp<>
+  sub s -> x y
+  print s
+end
+
 con x not y >
   mul n -> x y
   print n
@@ -9,10 +14,10 @@ con x not y >
   print l
 
   call run<>
-
 <
 
 op run<>
   div d -> x y
   print d
+  call newOp<>
 end
