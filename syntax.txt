@@ -17,4 +17,4 @@ GRAPHICS
 --------------------
 window > create a window (example: window *title* *width* *height*)
 
-square > create a square (example: square *window name* *square name* *width* *size*)
+square > create a square (example: square *square name* *width* *height* *x* *y*)

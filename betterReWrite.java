@@ -32,8 +32,10 @@ public class betterReWrite {
   static ArrayList<String> methodCallsStorage = new ArrayList<>();
 
   // graphics
-  static String[] graphicsKeywords = {"window"};
+  static String[] graphicsKeywords = {"window", "square"};
   static int windowExpect = 4;
+  static int squareExpect = 6;
+  static graphics currentGraphics;
 
 
   public static void main(String[] args) {
@@ -380,14 +382,35 @@ public class betterReWrite {
   public static void handleGraphics(String[] line) {
 
     graphics g = new graphics();
+    
+    if (line[0].equals(graphicsKeywords[0]) && line.length == windowExpect) {
 
-    System.out.println("line: " + Arrays.toString(line));
+      //System.out.println("line: " + Arrays.toString(line));
 
-    String name = line[1];
-    int width = Integer.parseInt(line[2]);
-    int height = Integer.parseInt(line[3]);
+      String name = line[1];
+      int width = Integer.parseInt(line[2]);
+      int height = Integer.parseInt(line[3]);
 
-    g.createWindow(name, width, height);
+      g.createWindow(name, width, height);
+
+      currentGraphics = g;
+
+    } else if (line[0].equals(graphicsKeywords[1]) && line.length == squareExpect) {
+
+      if (currentGraphics == null) {
+        System.out.println("window doesn't exist. create a window first");
+        return;
+      }
+
+      String name = line[1];
+      int width = Integer.parseInt(line[2]);
+      int height = Integer.parseInt(line[3]);
+      int x = Integer.parseInt(line[4]);
+      int y = Integer.parseInt(line[5]);
+
+      currentGraphics.createSquare(name, width, height, x, y);
+
+    }
 
   }
 
