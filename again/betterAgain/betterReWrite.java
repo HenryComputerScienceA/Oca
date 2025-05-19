@@ -68,6 +68,10 @@ public class betterReWrite {
               
             }
           }
+
+          if (s.contains("#")) {
+            // handle comments if you want
+          }
         
         }
 
