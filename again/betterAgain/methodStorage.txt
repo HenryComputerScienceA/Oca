@@ -1,0 +1,3 @@
+op exampleMethod<>
+  print exampleString
+end
