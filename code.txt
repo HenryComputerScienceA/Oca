@@ -1,2 +1,36 @@
-window tab 640 400
-square shape 50 50 100 100
+assign x 100
+assign y 10
+
+print x
+print y
+
+add a -> x y
+sub s -> x y
+div d -> x y
+mul m -> x y
+
+print a
+print s
+print d
+print m
+
+con x same y >
+  print x
+<
+con x not y >
+  print y
+<
+con x more y >
+  print x
+<
+con x less y >
+  print y
+<
+
+assign exampleString example
+
+call exampleMethod<>
+
+op exampleMethod<>
+  print exampleString
+end
