@@ -148,28 +148,34 @@ public class betterReWrite {
               boolean stop = false;
               ArrayList<String[]> blockLines = new ArrayList<>();
 
-              handleOps(line);
+              String[] splitFirstLine = line.split(" ");
 
-              while (!stop && (line = reader.readLine()) != null) {
+              if (splitFirstLine[1].contains("<>")) {
+                handleOps(line);
 
-                /*if (line.trim().equals("end")) {
-                  stop = true;
-                } else {
-                  String trimmedLine = line.trim();
-                  if (!trimmedLine.isEmpty()) {
-                    blockLines.add(trimmedLine.split(" "));
+                while (!stop && (line = reader.readLine()) != null) {
+                
+                  /*if (line.trim().equals("end")) {
+                    stop = true;
+                  } else {
+                    String trimmedLine = line.trim();
+                    if (!trimmedLine.isEmpty()) {
+                      blockLines.add(trimmedLine.split(" "));
+                    }
+                  }*/
+                
+                  if (line.equals("end")) {
+                    handleOps(line);
+                    stop = true;
+                  } else {
+                    //System.out.println("ops line: " + line);
+                    handleOps(line);
                   }
-                }*/
-
-                if (line.equals("end")) {
-                  handleOps(line);
-                  stop = true;
-                } else {
-                  //System.out.println("ops line: " + line);
-                  handleOps(line);
+                
                 }
-
               }
+
+              
 
               /*for (String[] blockLine : blockLines) {
                 handleOps(blockLine);

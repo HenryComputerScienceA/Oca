@@ -34,3 +34,6 @@ call exampleMethod<>
 op exampleMethod<>
   print exampleString
 end
+
+window exampleWindow 600 400
+square exampleSquare 50 50 200 200
