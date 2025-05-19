@@ -1,5 +1,3 @@
-package again.betterAgain;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,11 +31,17 @@ public class betterReWrite {
   static int methodCallExpect = 2; // example: call name<>
   static ArrayList<String> methodCallsStorage = new ArrayList<>();
 
+  // graphics
+  static String[] graphicsKeywords = {"window", "square"};
+  static int windowExpect = 4;
+  static int squareExpect = 6;
+  static graphics currentGraphics;
+
 
   public static void main(String[] args) {
 
     /* clears the file */
-    try (PrintWriter pw = new PrintWriter("again/betterAgain/methodStorage.txt")) {
+    try (PrintWriter pw = new PrintWriter("methodStorage.txt")) {
 
     } catch (IOException p) {
       p.printStackTrace();
@@ -45,7 +49,7 @@ public class betterReWrite {
     
     String line = "";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("again/code.txt"));) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("code.txt"));) {
 
        // read the file with code in it
       
@@ -174,6 +178,16 @@ public class betterReWrite {
               
 
             }
+          }
+
+          for (String g : graphicsKeywords) {
+
+            //System.out.println("making graphics: ");
+
+            if (g.equals(firstWord)) {
+              handleGraphics(splitSpaces);
+            }
+
           }
           
           for (String mc : methodCallers) {
@@ -346,7 +360,7 @@ public class betterReWrite {
 
     //System.out.println("handle ops here");
 
-    File methodStorageFile = new File("again/betterAgain/methodStorage.txt");
+    File methodStorageFile = new File("methodStorage.txt");
 
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(methodStorageFile, true))) { // create a file writer
       //System.out.println("trying to write to file: " + methodStorageFile);
@@ -369,13 +383,48 @@ public class betterReWrite {
 
   }
 
+  public static void handleGraphics(String[] line) {
+
+    graphics g = new graphics();
+    
+    if (line[0].equals(graphicsKeywords[0]) && line.length == windowExpect) {
+
+      //System.out.println("line: " + Arrays.toString(line));
+
+      String name = line[1];
+      int width = Integer.parseInt(line[2]);
+      int height = Integer.parseInt(line[3]);
+
+      g.createWindow(name, width, height);
+
+      currentGraphics = g;
+
+    } else if (line[0].equals(graphicsKeywords[1]) && line.length == squareExpect) {
+
+      if (currentGraphics == null) {
+        System.out.println("window doesn't exist. create a window first");
+        return;
+      }
+
+      String name = line[1];
+      int width = Integer.parseInt(line[2]);
+      int height = Integer.parseInt(line[3]);
+      int x = Integer.parseInt(line[4]);
+      int y = Integer.parseInt(line[5]);
+
+      currentGraphics.createSquare(name, width, height, x, y);
+
+    }
+
+  }
+
   public static void runMethods(String method) {
 
     //System.out.println("running methods");
 
     String line = "";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("again/betterAgain/methodStorage.txt"));) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("methodStorage.txt"));) {
 
       while ((line = reader.readLine()) != null) {
 

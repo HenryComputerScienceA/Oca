@@ -1,3 +1,5 @@
+BASIC KEYOWRDS
+--------------------
 assign > creating variables (example: assign x 4)
 
 print > printing to the console (example: print x)
@@ -9,3 +11,10 @@ con > if statements (example: con var1 *symbol* var2 > *inner text* <)
 op > methods (example: op name<> *inner text* end)
 
 call > call methods (example: call name<>)
+--------------------
+
+GRAPHICS
+--------------------
+window > create a window (example: window *title* *width* *height*)
+
+square > create a square (example: square *square name* *width* *height* *x* *y*)

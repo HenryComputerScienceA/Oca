@@ -1,0 +1,2 @@
+window tab 640 400
+square shape 50 50 100 100
