@@ -147,18 +147,83 @@ String firstWord = (splitSpaces[0].equals(null)) ? "" : splitSpaces[0];
 Creates a ```String``` called **firstWord** with a value of either empty or the first part in the **splitSpaces** array\
 *This uses a [ternary operator](https://www.geeksforgeeks.org/java-ternary-operator/)*
 
+```
+if (!firstWord.equals(null) || !splitSpaces[0].equals(""))
+```
+
+If **firstWord** isn't null or the first part in **splitSpaces** isn't empty, continue.
+
+```
+for (String v : variables) {
+  if (v.equals(firstWord)) {
+  //System.out.println("firstWord is a variable");
+
+  handleVariables(splitSpaces);
+
+  }
+}
+
+for (String c : consoleCommunication) {
+  if (c.equals(firstWord)) {
+  //System.out.println("firstWord wants to talk to the console");
+
+  handleConsole(splitSpaces);
+
+  }
+}
+
+for (String m : mathKeywords) {
+  if (m.equals(firstWord)) {
+  //System.out.println("firstWord wants to do math");
+
+  handleMath(splitSpaces);
+
+  }
+}
+```
+```
+for (String g : graphicsKeywords) {
+  //System.out.println("making graphics: ");
+
+  if (g.equals(firstWord)) {
+    handleGraphics(splitSpaces);
+  }
+
+}
+```
+
+1. The program goes through each keyword category ```String[]``` array
+2. Then it check to see if **firstWord** equals the current item its looking at in the array
+3. If it is, it then calls the method associated with the keyword and passes on the **splitSpaces** array to be broken apart and processed independently\
+*Keep reading for the code on how it deals with finding the rest of the keywords*
 
 ### Variables
 ```
 static HashMap<String, String> variableStorage = new HashMap<String, String>();
-static String[] variables = {"assign"};
-static int variableExpect = 3;
 ```
-Every variable is stored in a HashMap. Regardless of whether the value is a string or number, both the name and value are stored as strings inside the HashMap.
+Every variable is stored in a [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/). Regardless of whether the value is a string or number, both the name and value are stored as strings inside the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/).
+___
 
 ```
+public static void handleVariables(String[] line) {
 
+  //System.out.println("handleVariables line: " + Arrays.toString(line));
+
+  if (line.length == variableExpect) {
+    //System.out.println("valid variable declaration");
+
+    variableStorage.put(line[1], line[2]);
+
+  } else {
+    System.out.println("invalid variable declaration on line: " + Arrays.toString(line));
+  }
+
+}
 ```
+
+1. The **handleVariables** method takes in a ```String[]``` array and calls it **line**
+2. If the length of **line** is the same as what **variableExpect** specifies, add to the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/) **variableStorage** **line[1]** as the key, and **line[2]** as the value
+3. If the length of **line** is not the same as what **variableExpect** specifies, then print the error
 
 ### Printing to the console
 ```
@@ -172,13 +237,72 @@ Every variable is stored in a HashMap. Regardless of whether the value is a stri
 
 ### Control Flow
 ```
+for (String i : controlFlow) {
+  if (i.equals(firstWord)) {
+    //System.out.println("firstWord wants to control the flow");
 
+    boolean stop = false;
+    ArrayList<String[]> blockLines = new ArrayList<>();
+
+    while (!stop && (line = reader.readLine()) != null) {
+
+      if (line.trim().equals("<")) {
+        stop = true;
+      } else {
+        String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
+        if (!trimmedLine.isEmpty()) {
+          blockLines.add(trimmedLine.split(" "));
+        }
+      }
+
+    }
+
+    // run block only if condition is true
+    if (handleControlFlow(splitSpaces)) {
+      for (String[] blockLine : blockLines) {
+        getGiver(blockLine);
+      }
+    }
+
+  }
+}
 ```
+
+1. 
+
 
 ### Calling and Creating Methods
 ```
+for (String o : logicHolders) {
+  if (o.equals(firstWord)) {
+    //System.out.println("firstWord wants to hold logic");
 
+    boolean stop = false;
+    ArrayList<String[]> blockLines = new ArrayList<>();
+
+    String[] splitFirstLine = line.split(" ");
+
+    if (splitFirstLine[1].contains("<>")) {
+      handleOps(line);
+
+      while (!stop && (line = reader.readLine()) != null) {
+                
+      if (line.equals("end")) {
+        handleOps(line);
+        stop = true;
+      } else {
+        handleOps(line);
+      }
+                
+     }
+    }
+
+  }
+}
 ```
+
+1. 
+
 
 ### Graphics: Creating Windows
 ```
