@@ -95,4 +95,97 @@ To create a square use the ```square``` keyword.
 
 ## The Code
 
+### Non-Specific Details
+- Every keyword is stored in a String[] array.
+- Every keyword has an int value that stores the number of words the code expects when you use the keyword
 
+___
+
+```
+String line = "";
+
+<a name="my-custom-anchor-point"></a>
+try (BufferedReader reader = new BufferedReader(new FileReader("code.txt"));)
+```
+
+The [BufferedReader](https://www.geeksforgeeks.org/java-io-bufferedreader-class-java/) object, reader, reads the text given by [FileReader](https://www.geeksforgeeks.org/java-io-filereader-class/). Using a BufferedReader to read the file is efficient as it buffers the characters.
+
+```
+while ((line = reader.readLine()) != null) {
+  String[] splitSpaces = line.split(" ");
+  ArrayList<String> splitPeriod = new ArrayList<>();
+
+  for (String s : splitSpaces) {
+        
+    if (s.contains(".")) {
+      String[] again = s.split("\\.");
+          
+      for (String i : again) {
+        splitPeriod.addAll(Arrays.asList(again));
+              
+      }
+    }
+
+    if (s.contains("#")) {
+      // handle comments if you want
+    }
+        
+}
+```
+
+1. The ```while``` loop reads each line from **reader**
+2. It creates a ```String[]``` array called **splitSpaces** that is filled with the parts the **line** string thats split wherever a space is
+3. Then it creates an ```ArrayList<String>``` called **splitPeriod** that will be used later
+4. After, uses an advanced ```for``` loop to go through **splitSpaces** and check if one of the strings contains a period
+5. If it does, then create a ```String[]``` array called **again** that splits up the words wherever a period is (the "\\" is necessary because "." is a special character
+6. Then go through the **again** array and add it to the **splitPeriod** ArrayList
+
+```
+String firstWord = (splitSpaces[0].equals(null)) ? "" : splitSpaces[0];
+```
+
+Creates a ```String``` called **firstWord** with a value of either empty or the first part in the **splitSpaces** array\
+*This uses a [ternary operator](https://www.geeksforgeeks.org/java-ternary-operator/)*
+
+
+### Variables
+```
+static HashMap<String, String> variableStorage = new HashMap<String, String>();
+static String[] variables = {"assign"};
+static int variableExpect = 3;
+```
+Every variable is stored in a HashMap. Regardless of whether the value is a string or number, both the name and value are stored as strings inside the HashMap.
+
+```
+
+```
+
+### Printing to the console
+```
+
+```
+
+### Math
+```
+
+```
+
+### Control Flow
+```
+
+```
+
+### Calling and Creating Methods
+```
+
+```
+
+### Graphics: Creating Windows
+```
+
+```
+
+### Graphics: Create Squares
+```
+
+```
