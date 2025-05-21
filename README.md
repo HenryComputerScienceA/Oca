@@ -363,6 +363,54 @@ for (String i : controlFlow) {
 6. If the condition is false then it creates a string called **trimmedLine*** and sets it the line after trimming off the leading and trailing whitespaces *This is to allow for spaces or tabs in front of the inner lines*
 7. Then it checks if **trimmedLine** is empty
 8. If its not it splits up **trimmedLine** at the spaces and adds it to **blockLines**
+9. Outside of the ```while``` loop it has an ```if``` statement whose condition is set to true if the **handleControlFlow()** is true when given **splitSpaces** *the code below this is the handleControlFlow() method*
+10. If its true it runs a enhanced ```for``` loop that loops through **blockLines**
+11. For each item in **blockLines** it calls the **getGiver()** method and gives it **blockLine**
+
+```
+public static boolean handleControlFlow(String[] line) {
+
+    String var1 = variableStorage.get(line[1]);
+    String var2 = variableStorage.get(line[3]);
+
+    boolean isTrue = false;
+
+    if (var1 != null && var2 != null) { // check if var1 and var2 exist
+      try {
+        //System.out.println("both variables are numbers");
+        int v1I = Integer.parseInt(var1);
+        int v2I = Integer.parseInt(var2);
+
+        if (line[2].equals(allowedComparisons[0])) { // same "="
+          isTrue = (v1I == v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[1])) { // not "!="
+          isTrue = (v1I != v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[2])) { // more ">"
+          isTrue = (v1I > v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[3])) { // less "<"
+          isTrue = (v1I < v2I) ? true : false;
+        }
+      } catch (NumberFormatException e) {
+        // skip if not a numbers
+      }
+      
+    }
+
+    return isTrue;
+    
+  }
+```
+
+*This method returns a boolean*
+
+1. It first creates two strings called **var1** and **var2**
+2. It sets the two strings equals to the value of the key in **variableStorage** with the name of whatever **line[1]** and **line[3]** respectively
+3. Then it creates a ```boolean``` called **isTrue** and sets it to false
+4. Next it checks if **var1** and **var2** exist
+5. If they do it uses a ```try-catch``` block to catch if **var1** and/or **var2** are numbers
+6. Inside of the ```try-catch``` block it creates two integers called **v1I** and **v2I**, and sets them equal to the parsed ints of **var1** and **var2** respectively
+7. Then it uses ```if-else if``` statements to see what comparison the code specifies and sets **isTrue** to true or false, depending on the result of the appropriate comparison
+8. It then returns **isTrue**
 
 
 ### Calling and Creating Methods
@@ -380,12 +428,12 @@ for (String o : logicHolders) {
 
       while (!stop && (line = reader.readLine()) != null) {
                 
-      if (line.equals("end")) {
-        handleOps(line);
-        stop = true;
-      } else {
-        handleOps(line);
-      }
+        if (line.equals("end")) {
+          handleOps(line);
+          stop = true;
+        } else {
+          handleOps(line);
+        }
                 
      }
     }
@@ -396,6 +444,13 @@ for (String o : logicHolders) {
 
 1. First it checks if **firstWord** is equal to the current item in the array
 2. It then creates a ```boolean``` called **stop** and sets it to false, it also creates a ```ArrayList``` of string arrays and calls it **blockLines**
+3. It also creates a ```String[]``` array called **splitFirstLine** and sets it equal to **line** after it gets split up at the spaces
+4. Then it checks if **splitFirstLine[1]** (*this is where yu would put the name of the method*), contains "<>"
+5. If it does it calls the **handleOps()** method and gives it **line**
+6. It then runs a ```while``` loop that keeps looping as long as **stop** is false and the line its currently reading isn't null
+7. Then it checks the line equals "end"
+8. IF it does it calls **handleOps** and gives it **line**, and also sets **stop** to true
+9. If it doesn't it calls **handleOps** and gives it **line**
 
 
 ### Graphics: Creating Windows
