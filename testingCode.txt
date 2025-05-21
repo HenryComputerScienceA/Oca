@@ -1,0 +1,11 @@
+assign x1 200
+assign y1 200
+
+assign w1 50
+assign h1 50
+
+assign x2 300
+assign y2 300
+
+window TestingWindow 600 600
+square square1 w1 h1 x1 y1

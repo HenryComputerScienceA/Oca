@@ -57,7 +57,7 @@ public class betterReWrite {
     
     String line = "";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("code.txt"));) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("testingCode.txt"));) {
 
        // read the file with code in it
       
@@ -398,8 +398,11 @@ public class betterReWrite {
       //System.out.println("line: " + Arrays.toString(line));
 
       String name = line[1];
-      int width = Integer.parseInt(line[2]);
-      int height = Integer.parseInt(line[3]);
+
+      
+
+      int width = Integer.parseInt(variableStorage.get(line[2]));
+      int height = Integer.parseInt(variableStorage.get(line[3]));
 
       g.createWindow(name, width, height);
 
@@ -415,8 +418,8 @@ public class betterReWrite {
       String name = line[1];
       int width = Integer.parseInt(line[2]);
       int height = Integer.parseInt(line[3]);
-      int x = Integer.parseInt(line[4]);
-      int y = Integer.parseInt(line[5]);
+      int x = Integer.parseInt(variableStorage.get(line[4]));
+      int y = Integer.parseInt(variableStorage.get(line[5]));
 
       currentGraphics.createSquare(name, width, height, x, y);
 
