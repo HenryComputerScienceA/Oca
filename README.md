@@ -98,6 +98,7 @@ To create a square use the ```square``` keyword.
 ### Non-Specific Details
 - Every keyword is stored in a String[] array.
 - Every keyword has an int value that stores the number of words the code expects when you use the keyword
+- Most methods take in a ```String[]``` array and calls it **line**
 
 ___
 
@@ -221,25 +222,111 @@ public static void handleVariables(String[] line) {
 }
 ```
 
-1. The **handleVariables** method takes in a ```String[]``` array and calls it **line**
-2. If the length of **line** is the same as what **variableExpect** specifies, add to the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/) **variableStorage** **line[1]** as the key, and **line[2]** as the value
-3. If the length of **line** is not the same as what **variableExpect** specifies, then print the error
+1. If the length of **line** is the same as what **variableExpect** specifies, add to the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/) **variableStorage** **line[1]** as the key, and **line[2]** as the value
+2. If the length of **line** is not the same as what **variableExpect** specifies, then print the error
 
 ### Printing to the console
 ```
+public static void handleConsole(String[] line) {
 
+  if (line.length == consoleCommExpect) {
+
+    String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
+    System.out.println(result);
+
+  } else {
+    System.out.println("invalid console communcation on line: " + Arrays.toString(line));
+  }
+
+}
 ```
+
+1. Check if the length of **line** is the same as what **consoleCommExpect** specifies
+2. If it does then create a ```String``` called **result** which uses a [ternary operator](https://www.geeksforgeeks.org/java-ternary-operator/) to check if **variableStorage** contains a key with the same name as the value of **line[1]**
+3. If it does then it sets **result** to the value of that key
+4. If it doesn't then it sets **result** to an error message
+5. Then it prints the error
+
 
 ### Math
 ```
+public static void handleMath(String[] line) {
 
+  String newVariableName = line[1];
+
+  String sVar1 = line[3];
+  String sVar2 = line[4];
+
+  if (line.length == mathExpect) {
+
+    if (line[0].equals(mathKeywords[0]) && line[2].equals("->")) {
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 + var2));
+      }
+
+    } else if (line[0].equals(mathKeywords[1]) && line[2].equals("->")) { // subtract
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 - var2));
+
+      }
+
+    } else if (line[0].equals(mathKeywords[2]) && line[2].equals("->")) { // divide
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 / var2));
+
+      }
+
+    } else if (line[0].equals(mathKeywords[3]) && line[2].equals("->")) { // multiply
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 * var2));
+
+      }
+
+    }
+
+  } else {
+    System.out.println("invalid math declaration on line: " + Arrays.toString(line));
+  }
+
+}
 ```
+
+1. It starts by creating 3 new ```String``` variables, **newVariableName**, ***sVar1**, and **sVar2**
+2. It set them equal to **line[1]**, **line[3]**, and **line[4]** respectively
+*The following will apply for all math keywords (e.g., add, sub)*
+3. Then it checks if the first word in the line (**line[0]**), is a math keyword and what keyword it is
+4. Then it checks if **variableStorage** contains keys with the same name as the value of **sVar1** and **sVar2**
+5. If it does it parses both **sVar1** and **sVar2** from strings to ints **var1** and **var2** respectively
+6. It then adds to **variableStorage** the key of **newVariableName** with the value of the result of the specified operation between **var1** and **var2**
+
 
 ### Control Flow
 ```
 for (String i : controlFlow) {
   if (i.equals(firstWord)) {
-    //System.out.println("firstWord wants to control the flow");
 
     boolean stop = false;
     ArrayList<String[]> blockLines = new ArrayList<>();
@@ -268,14 +355,20 @@ for (String i : controlFlow) {
 }
 ```
 
-1. 
+1. It first checks if **firstWord** equals the current item in the array
+2. It then creates a ```boolean``` called **stop** and sets it to false, it also creates a ```ArrayList``` of string arrays and calls it **blockLines**
+3. Then it runs a ```while``` loop that keeps looping as long as **stop** equals false and the current line its reading is not null
+4. Inside the ```while``` loop it has an ```if``` statement whose condition is set to true if after it removes the whitespace in front of and at the end of the line, the text leftover is "<"
+5. If the condition is true then it sets **stop** to true, ending the ```while``` loop
+6. If the condition is false then it creates a string called **trimmedLine*** and sets it the line after trimming off the leading and trailing whitespaces *This is to allow for spaces or tabs in front of the inner lines*
+7. Then it checks if **trimmedLine** is empty
+8. If its not it splits up **trimmedLine** at the spaces and adds it to **blockLines**
 
 
 ### Calling and Creating Methods
 ```
 for (String o : logicHolders) {
   if (o.equals(firstWord)) {
-    //System.out.println("firstWord wants to hold logic");
 
     boolean stop = false;
     ArrayList<String[]> blockLines = new ArrayList<>();
@@ -301,7 +394,8 @@ for (String o : logicHolders) {
 }
 ```
 
-1. 
+1. First it checks if **firstWord** is equal to the current item in the array
+2. It then creates a ```boolean``` called **stop** and sets it to false, it also creates a ```ArrayList``` of string arrays and calls it **blockLines**
 
 
 ### Graphics: Creating Windows
