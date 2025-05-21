@@ -37,6 +37,14 @@ public class betterReWrite {
   static int squareExpect = 6;
   static graphics currentGraphics;
 
+  // input detection
+  static String[] inputKeyword = {"input"};
+  static int inputExpect = 2;
+
+  // looping
+  static String[] loopKeywords = {"loop"};
+  static int loopExpect = 4;
+
 
   public static void main(String[] args) {
 
@@ -175,14 +183,6 @@ public class betterReWrite {
                 }
               }
 
-              
-
-              /*for (String[] blockLine : blockLines) {
-                handleOps(blockLine);
-              }*/
-
-              
-
             }
           }
 
@@ -276,7 +276,7 @@ public class betterReWrite {
 
         }
 
-      } else if (line[0].equals(mathKeywords[1])) { // subtract
+      } else if (line[0].equals(mathKeywords[1]) && line[2].equals("->")) { // subtract
 
         //System.out.println("user wants to subtract");
 
@@ -290,7 +290,7 @@ public class betterReWrite {
 
         }
 
-      } else if (line[0].equals(mathKeywords[2])) { // divide
+      } else if (line[0].equals(mathKeywords[2]) && line[2].equals("->")) { // divide
 
         //System.out.println("user wants to divide");
 
@@ -304,7 +304,7 @@ public class betterReWrite {
 
         }
 
-      } else if (line[0].equals(mathKeywords[3])) { // multiply
+      } else if (line[0].equals(mathKeywords[3]) && line[2].equals("->")) { // multiply
 
         //System.out.println("user wants to multiply");
 
