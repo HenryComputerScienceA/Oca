@@ -1,13 +1,25 @@
-BASIC KEYOWRDS
+VARIABLES
 --------------------
 assign > creating variables (example: assign x 4)
+--------------------
 
+CONSOLE COMMUNICATION
+--------------------
 print > printing to the console (example: print x)
+--------------------
 
+MATH
+--------------------
 add, sub, div, mul > doing math (example: add (new variable name) -> (var1) (var2))
+--------------------
 
+CONTROL FLOW
+--------------------
 con > if statements (example: con var1 *symbol* var2 > *inner text* <)
+--------------------
 
+METHODS + CALLING THEM
+--------------------
 op > methods (example: op name<> *inner text* end)
 
 call > call methods (example: call name<>)
@@ -29,3 +41,9 @@ INPUT DETECTION
 --------------------
 input > get input from the user (example: input *key*)
 --------------------
+
+FILE IMPORTING
+--------------------
+
+--------------------
+
