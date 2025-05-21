@@ -95,4 +95,370 @@ To create a square use the ```square``` keyword.
 
 ## The Code
 
+### Non-Specific Details
+- Every keyword is stored in a String[] array.
+- Every keyword has an int value that stores the number of words the code expects when you use the keyword
+- Most methods take in a ```String[]``` array and calls it **line**
 
+___
+
+```
+String line = "";
+
+<a name="my-custom-anchor-point"></a>
+try (BufferedReader reader = new BufferedReader(new FileReader("code.txt"));)
+```
+
+The [BufferedReader](https://www.geeksforgeeks.org/java-io-bufferedreader-class-java/) object, reader, reads the text given by [FileReader](https://www.geeksforgeeks.org/java-io-filereader-class/). Using a BufferedReader to read the file is efficient as it buffers the characters.
+
+```
+while ((line = reader.readLine()) != null) {
+  String[] splitSpaces = line.split(" ");
+  ArrayList<String> splitPeriod = new ArrayList<>();
+
+  for (String s : splitSpaces) {
+        
+    if (s.contains(".")) {
+      String[] again = s.split("\\.");
+          
+      for (String i : again) {
+        splitPeriod.addAll(Arrays.asList(again));
+              
+      }
+    }
+
+    if (s.contains("#")) {
+      // handle comments if you want
+    }
+        
+}
+```
+
+1. The ```while``` loop reads each line from **reader**
+2. It creates a ```String[]``` array called **splitSpaces** that is filled with the parts the **line** string thats split wherever a space is
+3. Then it creates an ```ArrayList<String>``` called **splitPeriod** that will be used later
+4. After, uses an advanced ```for``` loop to go through **splitSpaces** and check if one of the strings contains a period
+5. If it does, then create a ```String[]``` array called **again** that splits up the words wherever a period is (the "\\" is necessary because "." is a special character
+6. Then go through the **again** array and add it to the **splitPeriod** ArrayList
+
+```
+String firstWord = (splitSpaces[0].equals(null)) ? "" : splitSpaces[0];
+```
+
+Creates a ```String``` called **firstWord** with a value of either empty or the first part in the **splitSpaces** array\
+*This uses a [ternary operator](https://www.geeksforgeeks.org/java-ternary-operator/)*
+
+```
+if (!firstWord.equals(null) || !splitSpaces[0].equals(""))
+```
+
+If **firstWord** isn't null or the first part in **splitSpaces** isn't empty, continue.
+
+```
+for (String v : variables) {
+  if (v.equals(firstWord)) {
+  //System.out.println("firstWord is a variable");
+
+  handleVariables(splitSpaces);
+
+  }
+}
+
+for (String c : consoleCommunication) {
+  if (c.equals(firstWord)) {
+  //System.out.println("firstWord wants to talk to the console");
+
+  handleConsole(splitSpaces);
+
+  }
+}
+
+for (String m : mathKeywords) {
+  if (m.equals(firstWord)) {
+  //System.out.println("firstWord wants to do math");
+
+  handleMath(splitSpaces);
+
+  }
+}
+```
+```
+for (String g : graphicsKeywords) {
+  //System.out.println("making graphics: ");
+
+  if (g.equals(firstWord)) {
+    handleGraphics(splitSpaces);
+  }
+
+}
+```
+
+1. The program goes through each keyword category ```String[]``` array
+2. Then it check to see if **firstWord** equals the current item its looking at in the array
+3. If it is, it then calls the method associated with the keyword and passes on the **splitSpaces** array to be broken apart and processed independently\
+*Keep reading for the code on how it deals with finding the rest of the keywords*
+
+### Variables
+```
+static HashMap<String, String> variableStorage = new HashMap<String, String>();
+```
+Every variable is stored in a [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/). Regardless of whether the value is a string or number, both the name and value are stored as strings inside the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/).
+___
+
+```
+public static void handleVariables(String[] line) {
+
+  //System.out.println("handleVariables line: " + Arrays.toString(line));
+
+  if (line.length == variableExpect) {
+    //System.out.println("valid variable declaration");
+
+    variableStorage.put(line[1], line[2]);
+
+  } else {
+    System.out.println("invalid variable declaration on line: " + Arrays.toString(line));
+  }
+
+}
+```
+
+1. If the length of **line** is the same as what **variableExpect** specifies, add to the [HashMap](https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/) **variableStorage** **line[1]** as the key, and **line[2]** as the value
+2. If the length of **line** is not the same as what **variableExpect** specifies, then print the error
+
+### Printing to the console
+```
+public static void handleConsole(String[] line) {
+
+  if (line.length == consoleCommExpect) {
+
+    String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
+    System.out.println(result);
+
+  } else {
+    System.out.println("invalid console communcation on line: " + Arrays.toString(line));
+  }
+
+}
+```
+
+1. Check if the length of **line** is the same as what **consoleCommExpect** specifies
+2. If it does then create a ```String``` called **result** which uses a [ternary operator](https://www.geeksforgeeks.org/java-ternary-operator/) to check if **variableStorage** contains a key with the same name as the value of **line[1]**
+3. If it does then it sets **result** to the value of that key
+4. If it doesn't then it sets **result** to an error message
+5. Then it prints the error
+
+
+### Math
+```
+public static void handleMath(String[] line) {
+
+  String newVariableName = line[1];
+
+  String sVar1 = line[3];
+  String sVar2 = line[4];
+
+  if (line.length == mathExpect) {
+
+    if (line[0].equals(mathKeywords[0]) && line[2].equals("->")) {
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 + var2));
+      }
+
+    } else if (line[0].equals(mathKeywords[1]) && line[2].equals("->")) { // subtract
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 - var2));
+
+      }
+
+    } else if (line[0].equals(mathKeywords[2]) && line[2].equals("->")) { // divide
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 / var2));
+
+      }
+
+    } else if (line[0].equals(mathKeywords[3]) && line[2].equals("->")) { // multiply
+
+
+      if (variableStorage.containsKey(sVar1) && variableStorage.containsKey(sVar2)) {
+
+        int var1 = Integer.parseInt(variableStorage.get(sVar1));
+        int var2 = Integer.parseInt(variableStorage.get(sVar2));
+
+        variableStorage.put(newVariableName, String.valueOf(var1 * var2));
+
+      }
+
+    }
+
+  } else {
+    System.out.println("invalid math declaration on line: " + Arrays.toString(line));
+  }
+
+}
+```
+
+1. It starts by creating 3 new ```String``` variables, **newVariableName**, ***sVar1**, and **sVar2**
+2. It set them equal to **line[1]**, **line[3]**, and **line[4]** respectively
+*The following will apply for all math keywords (e.g., add, sub)*
+3. Then it checks if the first word in the line (**line[0]**), is a math keyword and what keyword it is
+4. Then it checks if **variableStorage** contains keys with the same name as the value of **sVar1** and **sVar2**
+5. If it does it parses both **sVar1** and **sVar2** from strings to ints **var1** and **var2** respectively
+6. It then adds to **variableStorage** the key of **newVariableName** with the value of the result of the specified operation between **var1** and **var2**
+
+
+### Control Flow
+```
+for (String i : controlFlow) {
+  if (i.equals(firstWord)) {
+
+    boolean stop = false;
+    ArrayList<String[]> blockLines = new ArrayList<>();
+
+    while (!stop && (line = reader.readLine()) != null) {
+
+      if (line.trim().equals("<")) {
+        stop = true;
+      } else {
+        String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
+        if (!trimmedLine.isEmpty()) {
+          blockLines.add(trimmedLine.split(" "));
+        }
+      }
+
+    }
+
+    // run block only if condition is true
+    if (handleControlFlow(splitSpaces)) {
+      for (String[] blockLine : blockLines) {
+        getGiver(blockLine);
+      }
+    }
+
+  }
+}
+```
+
+1. It first checks if **firstWord** equals the current item in the array
+2. It then creates a ```boolean``` called **stop** and sets it to false, it also creates a ```ArrayList``` of string arrays and calls it **blockLines**
+3. Then it runs a ```while``` loop that keeps looping as long as **stop** equals false and the current line its reading is not null
+4. Inside the ```while``` loop it has an ```if``` statement whose condition is set to true if after it removes the whitespace in front of and at the end of the line, the text leftover is "<"
+5. If the condition is true then it sets **stop** to true, ending the ```while``` loop
+6. If the condition is false then it creates a string called **trimmedLine*** and sets it the line after trimming off the leading and trailing whitespaces *This is to allow for spaces or tabs in front of the inner lines*
+7. Then it checks if **trimmedLine** is empty
+8. If its not it splits up **trimmedLine** at the spaces and adds it to **blockLines**
+9. Outside of the ```while``` loop it has an ```if``` statement whose condition is set to true if the **handleControlFlow()** is true when given **splitSpaces** *the code below this is the handleControlFlow() method*
+10. If its true it runs a enhanced ```for``` loop that loops through **blockLines**
+11. For each item in **blockLines** it calls the **getGiver()** method and gives it **blockLine**
+
+```
+public static boolean handleControlFlow(String[] line) {
+
+    String var1 = variableStorage.get(line[1]);
+    String var2 = variableStorage.get(line[3]);
+
+    boolean isTrue = false;
+
+    if (var1 != null && var2 != null) { // check if var1 and var2 exist
+      try {
+        //System.out.println("both variables are numbers");
+        int v1I = Integer.parseInt(var1);
+        int v2I = Integer.parseInt(var2);
+
+        if (line[2].equals(allowedComparisons[0])) { // same "="
+          isTrue = (v1I == v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[1])) { // not "!="
+          isTrue = (v1I != v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[2])) { // more ">"
+          isTrue = (v1I > v2I) ? true : false;
+        } else if (line[2].equals(allowedComparisons[3])) { // less "<"
+          isTrue = (v1I < v2I) ? true : false;
+        }
+      } catch (NumberFormatException e) {
+        // skip if not a numbers
+      }
+      
+    }
+
+    return isTrue;
+    
+  }
+```
+
+*This method returns a boolean*
+
+1. It first creates two strings called **var1** and **var2**
+2. It sets the two strings equals to the value of the key in **variableStorage** with the name of whatever **line[1]** and **line[3]** respectively
+3. Then it creates a ```boolean``` called **isTrue** and sets it to false
+4. Next it checks if **var1** and **var2** exist
+5. If they do it uses a ```try-catch``` block to catch if **var1** and/or **var2** are numbers
+6. Inside of the ```try-catch``` block it creates two integers called **v1I** and **v2I**, and sets them equal to the parsed ints of **var1** and **var2** respectively
+7. Then it uses ```if-else if``` statements to see what comparison the code specifies and sets **isTrue** to true or false, depending on the result of the appropriate comparison
+8. It then returns **isTrue**
+
+
+### Calling and Creating Methods
+```
+for (String o : logicHolders) {
+  if (o.equals(firstWord)) {
+
+    boolean stop = false;
+    ArrayList<String[]> blockLines = new ArrayList<>();
+
+    String[] splitFirstLine = line.split(" ");
+
+    if (splitFirstLine[1].contains("<>")) {
+      handleOps(line);
+
+      while (!stop && (line = reader.readLine()) != null) {
+                
+        if (line.equals("end")) {
+          handleOps(line);
+          stop = true;
+        } else {
+          handleOps(line);
+        }
+                
+     }
+    }
+
+  }
+}
+```
+
+1. First it checks if **firstWord** is equal to the current item in the array
+2. It then creates a ```boolean``` called **stop** and sets it to false, it also creates a ```ArrayList``` of string arrays and calls it **blockLines**
+3. It also creates a ```String[]``` array called **splitFirstLine** and sets it equal to **line** after it gets split up at the spaces
+4. Then it checks if **splitFirstLine[1]** (*this is where yu would put the name of the method*), contains "<>"
+5. If it does it calls the **handleOps()** method and gives it **line**
+6. It then runs a ```while``` loop that keeps looping as long as **stop** is false and the line its currently reading isn't null
+7. Then it checks the line equals "end"
+8. IF it does it calls **handleOps** and gives it **line**, and also sets **stop** to true
+9. If it doesn't it calls **handleOps** and gives it **line**
+
+
+### Graphics: Creating Windows
+```
+
+```
+
+### Graphics: Create Squares
+```
+
+```
