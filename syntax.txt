@@ -34,12 +34,17 @@ square > create a square (example: square *square name* *width* *height* *x* *y*
 
 LOOPING
 --------------------
-loop > create a loop (example: loop *# of iteration for a 'for' loop or "inf" for a 'while' loop* *condition* > *inner text* end)
+loop > create a loop (example: loop *# of iteration for a 'for' loop or "inf" for a 'while' loop* *condition* *inner text* end)
 --------------------
 
 INPUT DETECTION
 --------------------
 input > get input from the user (example: input *key*)
+
+helper words
+~~~~~~~~~~~~
+getInput<> > get the current key pressed
+
 --------------------
 
 FILE IMPORTING

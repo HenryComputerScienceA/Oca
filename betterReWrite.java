@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class betterReWrite {
   
@@ -40,11 +42,19 @@ public class betterReWrite {
   // input detection
   static String[] inputKeyword = {"input"};
   static int inputExpect = 2;
+  static char currentPressedKey = ' ';
+
 
   // looping
   static String[] loopKeywords = {"loop"};
   static int loopExpect = 4;
 
+
+
+
+
+  static String line = "";
+  static BufferedReader reader;
 
   public static void main(String[] args) {
 
@@ -55,9 +65,10 @@ public class betterReWrite {
       p.printStackTrace();
     }
     
-    String line = "";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("testingCode.txt"));) {
+    try (BufferedReader r = new BufferedReader(new FileReader("testingCode.txt"));) {
+
+      reader = r;
 
        // read the file with code in it
       
@@ -209,6 +220,43 @@ public class betterReWrite {
             }
           }
 
+          for (String i : inputKeyword) {
+            if (i.equals(firstWord)) {
+              //handleInputs(splitSpaces);
+            }
+          }
+
+          for (String l : loopKeywords) {
+            if (l.equals(firstWord)) {
+
+              String[] loopHeader = splitSpaces;
+              boolean stop = false;
+              ArrayList<String[]> blockLines = new ArrayList<>();
+
+              while (!stop && (line = reader.readLine()) != null) {
+
+                if (line.equals("end")) {
+
+                  stop = true;
+
+                } else {
+
+                  String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
+                  if (!trimmedLine.isEmpty()) {
+                    blockLines.add(trimmedLine.split(" "));
+                  }
+
+                }
+
+              }
+
+              handleLooping(loopHeader, blockLines);
+
+
+
+            }
+          }
+
         } else {
             System.out.println("line is either null or empty");
         }
@@ -232,7 +280,37 @@ public class betterReWrite {
     if (line.length == variableExpect) {
       //System.out.println("valid variable declaration");
 
-      variableStorage.put(line[1], line[2]);
+      if (line[2].equals("getInput<>")) {
+
+        JFrame window = currentGraphics.getFrame();
+
+        // reset the current pressed key before waiting for input
+        currentPressedKey = ' ';
+
+        window.addKeyListener(new KeyAdapter() {
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            currentPressedKey = e.getKeyChar();
+
+          }
+
+        });
+
+        // wait until a key is pressed
+        while (currentPressedKey == ' ') {
+          try {
+            Thread.sleep(50);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+
+      } else {
+
+        variableStorage.put(line[1], line[2]);
+
+      }
 
     } else {
       System.out.println("invalid variable declaration on line: " + Arrays.toString(line));
@@ -246,7 +324,7 @@ public class betterReWrite {
 
       String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
       System.out.println(result);
-
+      
     } else {
       System.out.println("invalid console communcation on line: " + Arrays.toString(line));
     }
@@ -416,8 +494,8 @@ public class betterReWrite {
       }
 
       String name = line[1];
-      int width = Integer.parseInt(line[2]);
-      int height = Integer.parseInt(line[3]);
+      int width = Integer.parseInt(variableStorage.get(line[2]));
+      int height = Integer.parseInt(variableStorage.get(line[3]));
       int x = Integer.parseInt(variableStorage.get(line[4]));
       int y = Integer.parseInt(variableStorage.get(line[5]));
 
@@ -426,6 +504,53 @@ public class betterReWrite {
     }
 
   }
+
+  public static void handleLooping(String[] loopHeader, ArrayList<String[]> blockLines) {
+
+    int iterationAmount = 1;
+
+    System.out.println("looping line: " + line);
+
+    if (loopHeader[1].equals("inf")) {
+
+      System.out.println("while loop");
+
+      while (true) {
+
+        for (String[] blockLine : blockLines) {
+
+          //System.out.println("inside loop line: " + Arrays.toString(blockLine));
+
+          getGiver(blockLine);
+
+        }
+      
+      }
+
+    } else {
+
+      System.out.println("for loop");
+
+      iterationAmount = Integer.parseInt(loopHeader[1]);
+
+      for (int i = 0; i < iterationAmount; i++) {
+        
+        for (String[] blockLine : blockLines) {
+          getGiver(blockLine);
+        }
+
+      }
+
+    }
+
+  }
+
+
+
+
+
+
+
 
   public static void runMethods(String method) {
 
@@ -439,10 +564,29 @@ public class betterReWrite {
 
         String lineTrim = line.trim();
         String[] lineSpace = lineTrim.split(" ");
+        String firstWord = lineSpace[0];
 
         //System.out.println("method runner lineSpace: " + Arrays.toString(lineSpace));
 
-        getGiver(lineSpace);
+        boolean isLoop = false;
+        for (String l : loopKeywords) {
+          if (l.equals(firstWord)) {
+            isLoop = true;
+            break;
+          }
+        }
+
+        if (isLoop) {
+          String[] loopHeader = lineSpace;
+          ArrayList<String[]> blockLines = new ArrayList<>();
+          while ((line = reader.readLine()) != null) { // read each line in the loop
+              if (line.trim().equals("end")) break; // stop loop at the end
+              if (!line.trim().isEmpty()) blockLines.add(line.trim().split(" ")); // add split lines to blockLines
+          }
+          handleLooping(loopHeader, blockLines);
+        } else {
+          getGiver(lineSpace);
+        }
 
       }
 
@@ -483,42 +627,75 @@ public class betterReWrite {
             }
           }
 
-          /* no support for nested if statements for now */
-
-          /*for (String i : controlFlow) {
+          for (String i : controlFlow) {
             if (i.equals(firstWord)) {
               //System.out.println("firstWord wants to control the flow");
 
               boolean stop = false;
+              try {
+                while (!stop && (line = reader.readLine()) != null) {
 
+                  if (line.equals("<")) {
+                    stop = true;
+                  } else {
+                    handleControlFlow(splitSpaces);
+                  }
+
+                }
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+              
+
+            }
+          }
+
+        for (String mc : methodCallers) {
+
+          String trimmedFirstWord = splitSpaces[0].trim();
+          //System.out.println("firstWord: " + trimmedFirstWord);
+
+          if (mc.equals(firstWord) || mc.equals(trimmedFirstWord)) {
+
+            methodCallsStorage.add(splitSpaces[1]);
+            //System.out.println("methodCallsStorage: " + methodCallsStorage);
+
+          }
+        }
+        
+        for (String l : loopKeywords) {
+          if (l.equals(firstWord)) {
+
+            String[] loopHeader = splitSpaces;
+            boolean stop = false;
+            ArrayList<String[]> blockLines = new ArrayList<>();
+
+            try {
               while (!stop && (line = reader.readLine()) != null) {
 
-                if (line.equals("<")) {
+                if (line.equals("end")) {
+
                   stop = true;
+
                 } else {
-                  handleControlFlow(splitSpaces);
+
+                  String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
+                  if (!trimmedLine.isEmpty()) {
+                    blockLines.add(trimmedLine.split(" "));
+                  }
+
                 }
 
               }
 
+              handleLooping(loopHeader, blockLines);
+
+            } catch (IOException e) {
+              e.printStackTrace();
             }
-          }*/
 
-    for (String mc : methodCallers) {
-
-            String trimmedFirstWord = splitSpaces[0].trim();
-            //System.out.println("firstWord: " + trimmedFirstWord);
-
-            if (mc.equals(firstWord) || mc.equals(trimmedFirstWord)) {
-
-              methodCallsStorage.add(splitSpaces[1]);
-              //System.out.println("methodCallsStorage: " + methodCallsStorage);
-
-            }
           }
-          
-          
-
-  }
+        }
+    }
 
 }

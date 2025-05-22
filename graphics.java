@@ -15,6 +15,10 @@ public class graphics {
 
     }
 
+    public JFrame getFrame() {
+      return frame;
+    }
+
     public void createSquare(String name, int width, int height, int x, int y) {
 
         if (frame == null) return;

@@ -1,0 +1,9 @@
+op mainLoop<>
+
+  input d
+
+  square square1 w1 h1 x1 y1
+
+  con
+
+end
