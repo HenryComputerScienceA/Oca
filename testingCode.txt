@@ -17,10 +17,11 @@ window TestingWindow windowWidth windowHeight
 
 op mainLoop<>
 
-  input d
-
-  square square1 w1 h1 x1 y1
-
-  con
+  loop inf
+    assign currentInput* getInput<>
+    print currentInput*
+  end
 
 end
+
+call mainLoop<>

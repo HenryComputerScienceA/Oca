@@ -43,7 +43,7 @@ input > get input from the user (example: input *key*)
 
 helper words
 ~~~~~~~~~~~~
-getInput<> > get the current key pressed
+getInput<> > get the current key pressed (add "*" to the variable name)
 
 --------------------
 

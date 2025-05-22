@@ -285,7 +285,7 @@ public class betterReWrite {
         JFrame window = currentGraphics.getFrame();
 
         // reset the current pressed key before waiting for input
-        currentPressedKey = ' ';
+        //currentPressedKey = ' ';
 
         window.addKeyListener(new KeyAdapter() {
 
@@ -297,6 +297,8 @@ public class betterReWrite {
 
         });
 
+        window.requestFocus();
+
         // wait until a key is pressed
         while (currentPressedKey == ' ') {
           try {
@@ -305,6 +307,8 @@ public class betterReWrite {
             e.printStackTrace();
           }
         }
+
+        System.out.println(currentPressedKey);
 
       } else {
 
@@ -323,6 +327,15 @@ public class betterReWrite {
     if (line.length == consoleCommExpect) {
 
       String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
+
+      if (variableStorage.containsKey(line[1])) {
+        result = variableStorage.get(line[1]);
+      } else if (line[1].contains("*")) {
+        result = "";
+      } else {
+        result = "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
+      }
+
       System.out.println(result);
       
     } else {
