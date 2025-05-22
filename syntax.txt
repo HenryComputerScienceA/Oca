@@ -35,6 +35,11 @@ square > create a square (example: square *square name* *width* *height* *x* *y*
 LOOPING
 --------------------
 loop > create a loop (example: loop *# of iteration for a 'for' loop or "inf" for a 'while' loop* *condition* *inner text* end)
+
+helper words
+~~~~~~~~~~~~
+stop > stop the looping
+
 --------------------
 
 INPUT DETECTION

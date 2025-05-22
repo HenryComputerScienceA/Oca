@@ -1,8 +1,8 @@
 op mainLoop<>
 
   loop inf
-    assign currentInput getInput<>
-    print currentInput
+    assign currentInput* getInput<>
+    print currentInput*
   end
 
 end

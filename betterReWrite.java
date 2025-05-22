@@ -428,6 +428,12 @@ public class betterReWrite {
 
     boolean isTrue = false;
 
+    for (String l : line) {
+      if (l.contains("*")) {
+        System.out.println("con statement contains a '*'");
+      }
+    }
+
     if (var1 != null && var2 != null) { // check if var1 and var2 exist
       try {
         //System.out.println("both variables are numbers");
@@ -534,7 +540,13 @@ public class betterReWrite {
 
           //System.out.println("inside loop line: " + Arrays.toString(blockLine));
 
-          getGiver(blockLine);
+          String firstWord = blockLine[0];
+          
+          if (firstWord.equals("stop")) {
+            break;
+          } else {
+            getGiver(blockLine);
+          }
 
         }
       
