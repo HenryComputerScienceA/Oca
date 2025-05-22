@@ -54,7 +54,6 @@ public class betterReWrite {
 
 
   static String line = "";
-  static BufferedReader reader;
 
   public static void main(String[] args) {
 
@@ -66,9 +65,8 @@ public class betterReWrite {
     }
     
 
-    try (BufferedReader r = new BufferedReader(new FileReader("testingCode.txt"));) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("testingCode.txt"));) {
 
-      reader = r;
 
        // read the file with code in it
       
@@ -152,7 +150,7 @@ public class betterReWrite {
               // run block only if condition is true
               if (handleControlFlow(splitSpaces)) {
                 for (String[] blockLine : blockLines) {
-                  getGiver(blockLine);
+                  getGiver(blockLine, reader);
                 }
               }
 
@@ -292,7 +290,17 @@ public class betterReWrite {
           @Override
           public void keyPressed(KeyEvent e) {
             currentPressedKey = e.getKeyChar();
+          }
 
+          @Override
+          public void keyReleased(KeyEvent e) {
+            // Optionally reset currentPressedKey or handle key release
+            currentPressedKey = ' ';
+          }
+
+          @Override
+          public void keyTyped(KeyEvent e) {
+            // Optionally handle key typed events
           }
 
         });
@@ -308,7 +316,13 @@ public class betterReWrite {
           }
         }
 
-        System.out.println(currentPressedKey);
+        if (variableStorage.containsKey("input")) {
+          variableStorage.replace("input", Character.toString(currentPressedKey));
+          //System.out.println(variableStorage);
+        } else {
+          variableStorage.put("input", Character.toString(currentPressedKey));
+          //System.out.println(variableStorage);
+        }
 
       } else {
 
@@ -421,17 +435,22 @@ public class betterReWrite {
     
     //System.out.println("each line for con: " + Arrays.toString(line));
 
-    String var1 = variableStorage.get(line[1]);
-    String var2 = variableStorage.get(line[3]);
+    String var1 = "";
+    String var2 = "";
 
     //System.out.println("v1: " + var1 + "v2: " + var2);
 
     boolean isTrue = false;
 
-    for (String l : line) {
-      if (l.contains("*")) {
-        System.out.println("con statement contains a '*'");
-      }
+    if (line[1].contains("*")) {
+      //System.out.println("line[1] contains a a *");
+
+      var1 = Character.toString(currentPressedKey);
+      var2 = line[3];
+
+    } else {
+      var1 = variableStorage.get(line[1]);
+      var2 = variableStorage.get(line[3]);
     }
 
     if (var1 != null && var2 != null) { // check if var1 and var2 exist
@@ -545,7 +564,7 @@ public class betterReWrite {
           if (firstWord.equals("stop")) {
             break;
           } else {
-            getGiver(blockLine);
+            getGiver(blockLine, null);
           }
 
         }
@@ -561,7 +580,7 @@ public class betterReWrite {
       for (int i = 0; i < iterationAmount; i++) {
         
         for (String[] blockLine : blockLines) {
-          getGiver(blockLine);
+          getGiver(blockLine, null);
         }
 
       }
@@ -569,8 +588,6 @@ public class betterReWrite {
     }
 
   }
-
-
 
 
 
@@ -610,7 +627,7 @@ public class betterReWrite {
           }
           handleLooping(loopHeader, blockLines);
         } else {
-          getGiver(lineSpace);
+          getGiver(lineSpace, reader);
         }
 
       }
@@ -621,9 +638,9 @@ public class betterReWrite {
 
   }
 
-  public static void getGiver(String[] splitSpaces) {
+  public static void getGiver(String[] splitSpaces, BufferedReader reader) {
 
-    String firstWord = (splitSpaces[0].equals(null)) ? "" : splitSpaces[0];
+    String firstWord = (splitSpaces[0] == null) ? "" : splitSpaces[0];
 
     for (String v : variables) {
             if (v.equals(firstWord)) {
@@ -653,7 +670,7 @@ public class betterReWrite {
           }
 
           for (String i : controlFlow) {
-            if (i.equals(firstWord)) {
+            if (i.equals(firstWord) && reader != null) {
               //System.out.println("firstWord wants to control the flow");
 
               boolean stop = false;
@@ -689,8 +706,7 @@ public class betterReWrite {
         }
         
         for (String l : loopKeywords) {
-          if (l.equals(firstWord)) {
-
+          if (l.equals(firstWord) && reader != null) {
             String[] loopHeader = splitSpaces;
             boolean stop = false;
             ArrayList<String[]> blockLines = new ArrayList<>();

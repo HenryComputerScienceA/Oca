@@ -3,6 +3,12 @@ op mainLoop<>
   loop inf
     assign currentInput* getInput<>
     print currentInput*
+
+    con currentInput* same w >
+      assign inputTrue input_is_w
+      print inputTrue
+    <
+
   end
 
 end
