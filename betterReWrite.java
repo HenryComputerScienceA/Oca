@@ -6,6 +6,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class betterReWrite {
+
+  static HashMap<Character, Integer> alphabetMap = new HashMap<>();
+  static {
+    for (char c = 'a'; c <= 'z'; c++) {
+      alphabetMap.put(c, c - 'a' + 1);
+    }
+  }
   
   // keywords
   static HashMap<String, String> variableStorage = new HashMap<String, String>(); // store variables in here
@@ -57,6 +64,8 @@ public class betterReWrite {
 
   public static void main(String[] args) {
 
+    System.out.println("alphabet: " + alphabetMap);
+
     /* clears the file */
     try (PrintWriter pw = new PrintWriter("methodStorage.txt")) {
 
@@ -73,7 +82,7 @@ public class betterReWrite {
       while ((line = reader.readLine()) != null) {
         // split input into parts -> spaces, periods
         String[] splitSpaces = line.split(" ");
-        ArrayList<String> splitPeriod = new ArrayList<>();
+        //ArrayList<String> splitPeriod = new ArrayList<>();
 
         //System.out.println("line: " + line);
         //System.out.println("splitSpaces: " + Arrays.toString(splitSpaces));
@@ -81,14 +90,14 @@ public class betterReWrite {
         for (String s : splitSpaces) {
           //System.out.println(s);
         
-          if (s.contains(".")) {
+          /*if (s.contains(".")) {
             String[] again = s.split("\\.");
           
             for (String i : again) {
               splitPeriod.addAll(Arrays.asList(again)); // Add to ArrayList
               
             }
-          }
+          }*/
 
           if (s.contains("#")) {
             // handle comments if you want
@@ -163,7 +172,7 @@ public class betterReWrite {
               //System.out.println("firstWord wants to hold logic");
 
               boolean stop = false;
-              ArrayList<String[]> blockLines = new ArrayList<>();
+              //ArrayList<String[]> blockLines = new ArrayList<>();
 
               String[] splitFirstLine = line.split(" ");
 
@@ -248,7 +257,7 @@ public class betterReWrite {
 
               }
 
-              handleLooping(loopHeader, blockLines);
+              handleLooping(loopHeader, blockLines, reader);
 
 
 
@@ -283,7 +292,7 @@ public class betterReWrite {
         JFrame window = currentGraphics.getFrame();
 
         // reset the current pressed key before waiting for input
-        //currentPressedKey = ' ';
+        currentPressedKey = ' ';
 
         window.addKeyListener(new KeyAdapter() {
 
@@ -317,10 +326,10 @@ public class betterReWrite {
         }
 
         if (variableStorage.containsKey("input")) {
-          variableStorage.replace("input", Character.toString(currentPressedKey));
+          variableStorage.replace(line[1], Character.toString(currentPressedKey));
           //System.out.println(variableStorage);
         } else {
-          variableStorage.put("input", Character.toString(currentPressedKey));
+          variableStorage.put(line[1], Character.toString(currentPressedKey));
           //System.out.println(variableStorage);
         }
 
@@ -431,12 +440,36 @@ public class betterReWrite {
 
   }
 
+  public static boolean compareAlphabet(String letter1, String letter2) {
+
+    boolean sameNumber = false;
+
+    if (letter1.equals(null) || letter2.equals(null) || letter1.length() == 0 || letter2.length() == 0) {
+      return false;
+    }
+
+    int letter1Num = alphabetMap.get(letter1.charAt(0));
+    int letter2Num = alphabetMap.get(letter2.charAt(0));
+
+    System.out.println("letter1Num: " + letter1Num);
+    System.out.println("letter2Num: " + letter2Num);
+
+    if (letter1Num == letter2Num) {
+      sameNumber = true;
+    } else {
+      sameNumber = false;
+    }
+
+    return sameNumber;
+
+  }
+
   public static boolean handleControlFlow(String[] line) {
     
     //System.out.println("each line for con: " + Arrays.toString(line));
 
-    String var1 = "";
-    String var2 = "";
+    String var1 = null;
+    String var2 = null;
 
     //System.out.println("v1: " + var1 + "v2: " + var2);
 
@@ -445,7 +478,7 @@ public class betterReWrite {
     if (line[1].contains("*")) {
       //System.out.println("line[1] contains a a *");
 
-      var1 = Character.toString(currentPressedKey);
+      var1 = Character.toString(currentPressedKey).trim();
       var2 = line[3];
 
     } else {
@@ -469,7 +502,20 @@ public class betterReWrite {
           isTrue = (v1I < v2I) ? true : false;
         }
       } catch (NumberFormatException e) {
-        // skip if not a numbers
+        // compare strings if not numbers
+        System.out.println("var1: " + var1 + " var2 : " + var2);
+
+        if (line[2].equals(allowedComparisons[0])) {
+
+          isTrue = compareAlphabet(var1, var2);
+          System.out.println("inputs are the same");
+
+        } else {
+
+          isTrue = false;
+          System.out.println("inputs are not the same");
+
+        }
       }
       
     }
@@ -543,7 +589,7 @@ public class betterReWrite {
 
   }
 
-  public static void handleLooping(String[] loopHeader, ArrayList<String[]> blockLines) {
+  public static void handleLooping(String[] loopHeader, ArrayList<String[]> blockLines, BufferedReader reader) {
 
     int iterationAmount = 1;
 
@@ -561,10 +607,10 @@ public class betterReWrite {
 
           String firstWord = blockLine[0];
           
-          if (firstWord.equals("stop")) {
+          if (firstWord.equals("end")) {
             break;
           } else {
-            getGiver(blockLine, null);
+            getGiver(blockLine, reader);
           }
 
         }
@@ -580,7 +626,7 @@ public class betterReWrite {
       for (int i = 0; i < iterationAmount; i++) {
         
         for (String[] blockLine : blockLines) {
-          getGiver(blockLine, null);
+          getGiver(blockLine, reader);
         }
 
       }
@@ -625,7 +671,7 @@ public class betterReWrite {
               if (line.trim().equals("end")) break; // stop loop at the end
               if (!line.trim().isEmpty()) blockLines.add(line.trim().split(" ")); // add split lines to blockLines
           }
-          handleLooping(loopHeader, blockLines);
+          handleLooping(loopHeader, blockLines, reader);
         } else {
           getGiver(lineSpace, reader);
         }
@@ -674,16 +720,32 @@ public class betterReWrite {
               //System.out.println("firstWord wants to control the flow");
 
               boolean stop = false;
+              ArrayList<String[]> blockLines = new ArrayList<>();
+
               try {
                 while (!stop && (line = reader.readLine()) != null) {
 
-                  if (line.equals("<")) {
+                  if (line.trim().equals("<")) {
                     stop = true;
                   } else {
-                    handleControlFlow(splitSpaces);
+
+                    String trimmedLine = line.trim();
+                    if (!trimmedLine.isEmpty()) {
+                      blockLines.add(trimmedLine.split(" "));
+                    }
+
                   }
 
                 }
+
+                if (handleControlFlow(splitSpaces)) {
+
+                  for (String[] blockLine : blockLines) {
+                    getGiver(blockLine, reader);
+                  }
+
+                }
+
               } catch (IOException e) {
                 e.printStackTrace();
               }
@@ -729,7 +791,7 @@ public class betterReWrite {
 
               }
 
-              handleLooping(loopHeader, blockLines);
+              handleLooping(loopHeader, blockLines, reader);
 
             } catch (IOException e) {
               e.printStackTrace();

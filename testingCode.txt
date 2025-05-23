@@ -22,8 +22,23 @@ op mainLoop<>
     print currentInput*
 
     con currentInput* same w >
-      assign inputTrue input_is_w
-      print inputTrue
+      assign inputW input_is_w
+      print inputW
+    <
+
+    con currentInput* same s >
+      assign inputS input_is_s
+      print inputS
+    <
+
+    con currentInput* same a >
+      assign inputA input_is_a
+      print inputA
+    <
+
+    con currentInput* same d >
+      assign inputD input_is_d
+      print inputD
     <
 
   end
