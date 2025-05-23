@@ -10,6 +10,7 @@ Disclaimer: some details may be out of date
 - No support for nested ```con``` statements
 - Only 1 condition can be checked in a ```con``` statement
 - ```con``` statements and ```op``` methods have to be multi-line
+- Spacing is super important
 
 ## Custom Syntax
 
