@@ -144,7 +144,11 @@ public class betterReWrite {
             if (m.equals(firstWord)) {
               //System.out.println("firstWord wants to do math");
 
-              handleMath(splitSpaces);
+              if (currentlyInsideCon && conIsTrue) {
+                handleMath(splitSpaces);
+              } else {
+                handleMath(splitSpaces);
+              }
 
             }
           }
@@ -303,8 +307,8 @@ public class betterReWrite {
 
     boolean result = false;
 
-    String var1 = variableStorage.get(line[1]);
-    String var2 = line[3];
+    String var1 = variableStorage.get(line[1]).trim();
+    String var2 = line[3].trim();
 
     System.out.println("var1: " + var1);
     System.out.println("var2: " + var2);
@@ -724,7 +728,11 @@ public class betterReWrite {
             if (v.equals(firstWord)) {
               //System.out.println("firstWord is a variable");
 
-              handleVariables(splitSpaces);
+              if (currentlyInsideCon && conIsTrue) {
+                handleVariables(splitSpaces);
+              } else {
+                handleVariables(splitSpaces);
+              }
 
             }
           }
@@ -736,7 +744,9 @@ public class betterReWrite {
               //System.out.println("currentlyInsideCon: " + currentlyInsideCon);
               System.out.println("conIsTrue: " + conIsTrue);
 
-              if (conIsTrue) {
+              if (currentlyInsideCon && conIsTrue) {
+                handleConsole(splitSpaces);
+              } else {
                 handleConsole(splitSpaces);
               }
 
@@ -747,7 +757,11 @@ public class betterReWrite {
             if (m.equals(firstWord)) {
               //System.out.println("firstWord wants to do math");
 
-              handleMath(splitSpaces);
+              if (currentlyInsideCon && conIsTrue) {
+                handleMath(splitSpaces);
+              } else {
+                handleMath(splitSpaces);
+              }
 
             }
           }

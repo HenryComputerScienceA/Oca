@@ -22,14 +22,14 @@ assign worksInside this_works_inside
 print worksOutside
 
 loop inf
-assign currentInput* getInput<>
-print currentInput*
-con currentInput* same w >
-  assign wWorks w_works
-  print wWorks
-<
-con currentInput* same s >
-  assign sWorks s_works
-  print sWorks
-<
+  assign currentInput* getInput<>
+  print currentInput*
+  con currentInput* same w >
+    assign wWorks w_works
+    print wWorks
+  <
+  con currentInput* same s >
+    assign sWorks s_works
+    print sWorks
+  <
 end
