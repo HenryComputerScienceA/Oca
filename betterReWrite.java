@@ -57,7 +57,8 @@ public class betterReWrite {
   static int loopExpect = 4;
 
 
-
+  static boolean currentlyInsideCon = false;
+  static boolean conIsTrue = false;
 
 
   static String line = "";
@@ -113,7 +114,11 @@ public class betterReWrite {
             if (v.equals(firstWord)) {
               //System.out.println("firstWord is a variable");
 
-              handleVariables(splitSpaces);
+              if (currentlyInsideCon && conIsTrue) {
+                handleVariables(splitSpaces);
+              } else {
+                handleVariables(splitSpaces);
+              }
 
             }
           }
@@ -122,7 +127,15 @@ public class betterReWrite {
             if (c.equals(firstWord)) {
               //System.out.println("firstWord wants to talk to the console");
 
-              handleConsole(splitSpaces);
+              //System.out.println("currentlyInsideCon: " + currentlyInsideCon);
+              //System.out.println("conIsTrue: " + conIsTrue);
+
+              if (currentlyInsideCon && conIsTrue) {
+                handleConsole(splitSpaces);
+              } else {
+                handleConsole(splitSpaces);
+              }
+
 
             }
           }
@@ -139,6 +152,8 @@ public class betterReWrite {
           for (String i : controlFlow) {
             if (i.equals(firstWord)) {
               //System.out.println("firstWord wants to control the flow");
+              currentlyInsideCon = true;
+              conIsTrue = false;
 
               boolean stop = false;
               ArrayList<String[]> blockLines = new ArrayList<>();
@@ -157,9 +172,11 @@ public class betterReWrite {
               }
 
               //? run block only if condition is true
-              if (handleConInputs(splitSpaces)) {
+              if (handleControlFlow(splitSpaces)) {
                 for (String[] blockLine : blockLines) {
+                  conIsTrue = true;
                   getGiver(blockLine, reader);
+                  currentlyInsideCon = false;
                 }
               } else {
                 System.out.println("handConInputs() returned false");
@@ -282,8 +299,6 @@ public class betterReWrite {
     }
   }
 
-  //? the following is an attempt at fixing the input bugs
-
   public static boolean handleConInputs(String[] line) {
 
     boolean result = false;
@@ -296,17 +311,17 @@ public class betterReWrite {
 
     if (var1.equals(var2)) {
       result = true;
-      System.out.println("the inputs are the same: " + result);
+      conIsTrue = true;
+      //System.out.println("the inputs are the same: " + result);
     } else {
       result = false;
-      System.out.println("the inputs are not the same: " + result);
+      conIsTrue = false;
+      //System.out.println("the inputs are not the same: " + result);
     }
     
     return result;
 
   }
-
-  //? end of the attempt
 
   //? variables
   public static void handleVariables(String[] line) {
@@ -488,30 +503,6 @@ public class betterReWrite {
 
   }
 
-  public static boolean compareAlphabet(String letter1, String letter2) {
-
-    boolean sameNumber = false;
-
-    if (letter1.equals(null) || letter2.equals(null) || letter1.length() == 0 || letter2.length() == 0) {
-      return false;
-    }
-
-    int letter1Num = alphabetMap.get(letter1.charAt(0));
-    int letter2Num = alphabetMap.get(letter2.charAt(0));
-
-    System.out.println("letter1Num: " + letter1Num);
-    System.out.println("letter2Num: " + letter2Num);
-
-    if (letter1Num == letter2Num) {
-      sameNumber = true;
-    } else {
-      sameNumber = false;
-    }
-
-    return sameNumber;
-
-  }
-
   //? "con" statements
   public static boolean handleControlFlow(String[] line) {
     
@@ -530,10 +521,8 @@ public class betterReWrite {
     if (line[1].contains("*")) {
       //System.out.println("line[1] contains a a *");
 
-      //?  if it is a input then set var1 to the current key pressed
-      var1 = Character.toString(currentPressedKey).trim();
-      //? and set var2 to line[3] which is what will be compared to var1
-      var2 = line[3];
+      //? send the line elsewhere to be handled
+      handleConInputs(line);
 
     } else {
       //? if is not a input then set var1 and var2 to the value of the specified variable
@@ -558,21 +547,7 @@ public class betterReWrite {
           isTrue = (v1I < v2I) ? true : false;
         }
       } catch (NumberFormatException e) {
-        //? compare strings if not numbers
-        System.out.println("var1: " + var1 + " var2 : " + var2);
-
-        if (line[2].equals(allowedComparisons[0])) {
-
-          //? if the user used "same" then set isTrue to the result of sending var1 and var2 to compareAlphabet()
-          isTrue = compareAlphabet(var1, var2);
-          System.out.println("inputs are the same");
-
-        } else {
-          //? if inputs are not the same set isTrue to false
-          isTrue = false;
-          System.out.println("inputs are not the same");
-
-        }
+        //? non numbers
       }
       
     }
@@ -758,7 +733,12 @@ public class betterReWrite {
             if (c.equals(firstWord)) {
               //System.out.println("firstWord wants to talk to the console");
 
-              handleConsole(splitSpaces);
+              //System.out.println("currentlyInsideCon: " + currentlyInsideCon);
+              System.out.println("conIsTrue: " + conIsTrue);
+
+              if (conIsTrue) {
+                handleConsole(splitSpaces);
+              }
 
             }
           }
@@ -775,6 +755,8 @@ public class betterReWrite {
           for (String i : controlFlow) {
             if (i.equals(firstWord) && reader != null) {
               //System.out.println("firstWord wants to control the flow");
+              currentlyInsideCon = true;
+              conIsTrue = false;
 
               boolean stop = false;
               ArrayList<String[]> blockLines = new ArrayList<>();
@@ -796,9 +778,11 @@ public class betterReWrite {
                 }
 
                 //? run block only if condition is true
-                if (handleConInputs(splitSpaces)) {
+                if (handleControlFlow(splitSpaces)) {
                   for (String[] blockLine : blockLines) {
+                    conIsTrue = true;
                     getGiver(blockLine, reader);
+                    currentlyInsideCon = false;
                   }
                 } else {
                   System.out.println("handConInputs() returned false");
