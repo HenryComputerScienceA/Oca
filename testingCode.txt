@@ -15,34 +15,12 @@ print windowHeight
 
 window TestingWindow windowWidth windowHeight
 
-op mainLoop<>
+assign works this_works
 
-  loop inf
-    assign currentInput* getInput<>
-    print currentInput*
-
-    con currentInput* same w >
-      assign inputW input_is_w
-      print inputW
-    <
-
-    con currentInput* same s >
-      assign inputS input_is_s
-      print inputS
-    <
-
-    con currentInput* same a >
-      assign inputA input_is_a
-      print inputA
-    <
-
-    con currentInput* same d >
-      assign inputD input_is_d
-      print inputD
-    <
-
-  end
-
+loop inf
+assign currentInput* getInput<>
+print currentInput*
+con currentInput* same w >
+  print works
+<
 end
-
-call mainLoop<>

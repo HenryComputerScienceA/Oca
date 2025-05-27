@@ -13,7 +13,7 @@ public class betterReWrite {
       alphabetMap.put(c, c - 'a' + 1);
     }
   }
-  // works?
+
   //? keywords
   static HashMap<String, String> variableStorage = new HashMap<String, String>(); //? store variables in here
   static String[] variables = {"assign"};
@@ -157,10 +157,12 @@ public class betterReWrite {
               }
 
               //? run block only if condition is true
-              if (handleControlFlow(splitSpaces)) {
+              if (handleConInputs(splitSpaces)) {
                 for (String[] blockLine : blockLines) {
                   getGiver(blockLine, reader);
                 }
+              } else {
+                System.out.println("handConInputs() returned false");
               }
 
             }
@@ -279,6 +281,32 @@ public class betterReWrite {
       runMethods(rm);
     }
   }
+
+  //? the following is an attempt at fixing the input bugs
+
+  public static boolean handleConInputs(String[] line) {
+
+    boolean result = false;
+
+    String var1 = variableStorage.get(line[1]);
+    String var2 = line[3];
+
+    System.out.println("var1: " + var1);
+    System.out.println("var2: " + var2);
+
+    if (var1.equals(var2)) {
+      result = true;
+      System.out.println("the inputs are the same: " + result);
+    } else {
+      result = false;
+      System.out.println("the inputs are not the same: " + result);
+    }
+    
+    return result;
+
+  }
+
+  //? end of the attempt
 
   //? variables
   public static void handleVariables(String[] line) {
@@ -767,12 +795,13 @@ public class betterReWrite {
 
                 }
 
-                if (handleControlFlow(splitSpaces)) {
-
+                //? run block only if condition is true
+                if (handleConInputs(splitSpaces)) {
                   for (String[] blockLine : blockLines) {
                     getGiver(blockLine, reader);
                   }
-
+                } else {
+                  System.out.println("handConInputs() returned false");
                 }
 
               } catch (IOException e) {
