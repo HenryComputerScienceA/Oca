@@ -13,7 +13,7 @@ public class betterReWrite {
       alphabetMap.put(c, c - 'a' + 1);
     }
   }
-  
+  // works?
   //? keywords
   static HashMap<String, String> variableStorage = new HashMap<String, String>(); //? store variables in here
   static String[] variables = {"assign"};
