@@ -2,10 +2,8 @@ assign x1 200
 assign y1 200
 
 assign w1 50
-assign h1 75
+assign h1 50
 
-assign x2 300
-assign y2 300
 
 assign windowWidth 600
 assign windowHeight 600
@@ -14,6 +12,7 @@ print windowWidth
 print windowHeight
 
 window TestingWindow windowWidth windowHeight
+square testSquare w1 h1 x1 y1
 
 assign worksOutside this_works_outside
 assign worksInside this_works_inside
@@ -22,14 +21,14 @@ assign worksInside this_works_inside
 print worksOutside
 
 loop inf
-  assign currentInput* getInput<>
-  print currentInput*
-  con currentInput* same w >
-    assign wWorks w_works
-    print wWorks
-  <
-  con currentInput* same s >
-    assign sWorks s_works
-    print sWorks
-  <
+assign currentInput* getInput<>
+print currentInput*
+con currentInput* same w >
+assign wWorks w_works
+print wWorks
+<
+con currentInput* same s >
+assign sWorks s_works
+print sWorks
+<
 end

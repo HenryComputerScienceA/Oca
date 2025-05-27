@@ -127,12 +127,10 @@ public class betterReWrite {
             if (c.equals(firstWord)) {
               //System.out.println("firstWord wants to talk to the console");
 
-              //System.out.println("currentlyInsideCon: " + currentlyInsideCon);
-              //System.out.println("conIsTrue: " + conIsTrue);
+              System.out.println("currentlyInsideCon: " + currentlyInsideCon);
+              System.out.println("conIsTrue: " + conIsTrue);
 
               if (currentlyInsideCon && conIsTrue) {
-                handleConsole(splitSpaces);
-              } else {
                 handleConsole(splitSpaces);
               }
 
@@ -175,15 +173,34 @@ public class betterReWrite {
 
               }
 
-              //? run block only if condition is true
-              if (handleControlFlow(splitSpaces)) {
-                for (String[] blockLine : blockLines) {
-                  conIsTrue = true;
-                  getGiver(blockLine, reader);
+              System.out.println("splitSpaces[1]: " + splitSpaces[1]);
+
+              if (splitSpaces[1].contains("*")) {
+                //? run block only if condition is true
+                if (handleConInputs(splitSpaces)) {
+                  for (String[] blockLine : blockLines) {
+                    conIsTrue = true;
+                    getGiver(blockLine, reader);
+                    currentlyInsideCon = false;
+                  }
+                } else {
+                  conIsTrue = false;
+                  System.out.println("handleConInputs() retrned false");
                   currentlyInsideCon = false;
                 }
               } else {
-                System.out.println("handConInputs() returned false");
+                //? run block only if condition is true
+                if (handleControlFlow(splitSpaces)) {
+                  for (String[] blockLine : blockLines) {
+                    conIsTrue = true;
+                    getGiver(blockLine, reader);
+                    currentlyInsideCon = false;
+                  }
+                } else {
+                  conIsTrue = false;
+                  System.out.println("handConInputs() returned false");
+                  currentlyInsideCon = false;
+                }
               }
 
             }
@@ -316,11 +333,11 @@ public class betterReWrite {
     if (var1.equals(var2)) {
       result = true;
       conIsTrue = true;
-      //System.out.println("the inputs are the same: " + result);
+      System.out.println("the inputs are the same: " + result);
     } else {
       result = false;
       conIsTrue = false;
-      //System.out.println("the inputs are not the same: " + result);
+      System.out.println("the inputs are not the same: " + result);
     }
     
     return result;
@@ -522,8 +539,8 @@ public class betterReWrite {
     boolean isTrue = false;
 
     //? checks for a * which indicates ithas something to do with inputs
-    if (line[1].contains("*")) {
-      //System.out.println("line[1] contains a a *");
+    if (line[1].equals("currentInput")) {
+      System.out.println("line[1] equals 'currentInput'");
 
       //? send the line elsewhere to be handled
       handleConInputs(line);
@@ -552,6 +569,7 @@ public class betterReWrite {
         }
       } catch (NumberFormatException e) {
         //? non numbers
+        handleConInputs(line);
       }
       
     }
@@ -741,12 +759,10 @@ public class betterReWrite {
             if (c.equals(firstWord)) {
               //System.out.println("firstWord wants to talk to the console");
 
-              //System.out.println("currentlyInsideCon: " + currentlyInsideCon);
+              System.out.println("currentlyInsideCon: " + currentlyInsideCon);
               System.out.println("conIsTrue: " + conIsTrue);
 
               if (currentlyInsideCon && conIsTrue) {
-                handleConsole(splitSpaces);
-              } else {
                 handleConsole(splitSpaces);
               }
 
@@ -791,16 +807,36 @@ public class betterReWrite {
 
                 }
 
-                //? run block only if condition is true
-                if (handleControlFlow(splitSpaces)) {
-                  for (String[] blockLine : blockLines) {
-                    conIsTrue = true;
-                    getGiver(blockLine, reader);
+                //System.out.println("splitSpaces[1]: " + splitSpaces[1]);
+                if (splitSpaces[1].contains("*")) {
+                  //? run block only if condition is true
+                  if (handleConInputs(splitSpaces)) {
+                    for (String[] blockLine : blockLines) {
+                      conIsTrue = true;
+                      getGiver(blockLine, reader);
+                      currentlyInsideCon = false;
+                    }
+                  } else {
+                    conIsTrue = false;
+                    System.out.println("handleConInputs() retrned false");
                     currentlyInsideCon = false;
                   }
                 } else {
-                  System.out.println("handConInputs() returned false");
+                  //? run block only if condition is true
+                  if (handleControlFlow(splitSpaces)) {
+                    for (String[] blockLine : blockLines) {
+                      conIsTrue = true;
+                      getGiver(blockLine, reader);
+                      currentlyInsideCon = false;
+                    }
+                  } else {
+                    conIsTrue = false;
+                    currentlyInsideCon = false;
+                    System.out.println("handConInputs() returned false");
+                  }
                 }
+
+                
 
               } catch (IOException e) {
                 e.printStackTrace();
