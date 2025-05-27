@@ -14,45 +14,45 @@ public class betterReWrite {
     }
   }
   
-  //? keywords
-  static HashMap<String, String> variableStorage = new HashMap<String, String>(); //? store variables in here
+  // keywords
+  static HashMap<String, String> variableStorage = new HashMap<String, String>(); // store variables in here
   static String[] variables = {"assign"};
   static int variableExpect = 3;
 
-  //? control flow
+  // control flow
   static String[] controlFlow = {"con"};
-  static int controlExpect = 5; //? example: con var1 *symbol* var2 > *inner text* <
+  static int controlExpect = 5; // example: con var1 *symbol* var2 > *inner text* <
   static String[] allowedComparisons = {"same"/*=*/, "not"/*!=*/, "more"/*>*/, "less"/*<*/};
 
-  //? talking with the console
+  // talking with the console
   static String[] consoleCommunication = {"print"};
   static int consoleCommExpect = 2;
 
-  //? math
+  // math
   static String[] mathKeywords = {"add", "sub", "div", "mul"};
-  static int mathExpect = 5; //? example: add (new variable name) -> (var1) (var2)
-                             //? "->" is a spacer to make it easier to read
+  static int mathExpect = 5; // example: add (new variable name) -> (var1) (var2)
+                             // "->" is a spacer to make it easier to read
 
-  //? logic holders
+  // logic holders
   static String[] logicHolders = {"op"};
-  static int logicExpect = 2; //? example: op name<> *inner text* end
+  static int logicExpect = 2; // example: op name<> *inner text* end
   static String[] methodCallers = {"call"};
-  static int methodCallExpect = 2; //? example: call name<>
+  static int methodCallExpect = 2; // example: call name<>
   static ArrayList<String> methodCallsStorage = new ArrayList<>();
 
-  //? graphics
+  // graphics
   static String[] graphicsKeywords = {"window", "square"};
   static int windowExpect = 4;
   static int squareExpect = 6;
   static graphics currentGraphics;
 
-  //? input detection
+  // input detection
   static String[] inputKeyword = {"input"};
   static int inputExpect = 2;
   static char currentPressedKey = ' ';
 
 
-  //? looping
+  // looping
   static String[] loopKeywords = {"loop"};
   static int loopExpect = 4;
 
@@ -66,7 +66,7 @@ public class betterReWrite {
 
     System.out.println("alphabet: " + alphabetMap);
 
-    //? clears the file
+    /* clears the file */
     try (PrintWriter pw = new PrintWriter("methodStorage.txt")) {
 
     } catch (IOException p) {
@@ -77,10 +77,10 @@ public class betterReWrite {
     try (BufferedReader reader = new BufferedReader(new FileReader("testingCode.txt"));) {
 
 
-       //? read the file with code in it
+       // read the file with code in it
       
       while ((line = reader.readLine()) != null) {
-        //? split input into parts -> spaces
+        // split input into parts -> spaces, periods
         String[] splitSpaces = line.split(" ");
         //ArrayList<String> splitPeriod = new ArrayList<>();
 
@@ -148,7 +148,7 @@ public class betterReWrite {
                 if (line.trim().equals("<")) {
                   stop = true;
                 } else {
-                  String trimmedLine = line.trim(); //? get rid of whitespaces infront and after the line
+                  String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
                   if (!trimmedLine.isEmpty()) {
                     blockLines.add(trimmedLine.split(" "));
                   }
@@ -156,7 +156,7 @@ public class betterReWrite {
 
               }
 
-              //? run block only if condition is true
+              // run block only if condition is true
               if (handleControlFlow(splitSpaces)) {
                 for (String[] blockLine : blockLines) {
                   getGiver(blockLine, reader);
@@ -166,7 +166,7 @@ public class betterReWrite {
             }
           }
 
-          //? method detection
+          // method detection
           for (String o : logicHolders) {
             if (o.equals(firstWord)) {
               //System.out.println("firstWord wants to hold logic");
@@ -248,7 +248,7 @@ public class betterReWrite {
 
                 } else {
 
-                  String trimmedLine = line.trim(); //? get rid of whitespaces infront and after the line
+                  String trimmedLine = line.trim(); // get rid of whitespaces infront and after the line
                   if (!trimmedLine.isEmpty()) {
                     blockLines.add(trimmedLine.split(" "));
                   }
@@ -280,7 +280,8 @@ public class betterReWrite {
     }
   }
 
-  //? variables
+  
+
   public static void handleVariables(String[] line) {
 
     //System.out.println("handleVariables line: " + Arrays.toString(line));
@@ -292,19 +293,16 @@ public class betterReWrite {
 
         JFrame window = currentGraphics.getFrame();
 
-        //? reset the current pressed key before waiting for input
+        // reset the current pressed key before waiting for input
         currentPressedKey = ' ';
 
-        //? listen for key inputs
         window.addKeyListener(new KeyAdapter() {
 
-          //? check for key press
           @Override
           public void keyPressed(KeyEvent e) {
             currentPressedKey = e.getKeyChar();
           }
 
-          //? check for key release
           @Override
           public void keyReleased(KeyEvent e) {
             // Optionally reset currentPressedKey or handle key release
@@ -318,10 +316,9 @@ public class betterReWrite {
 
         });
 
-        //? make the window the active component
         window.requestFocus();
 
-        //? wait until a key is pressed
+        // wait until a key is pressed
         while (currentPressedKey == ' ') {
           try {
             Thread.sleep(50);
@@ -330,20 +327,16 @@ public class betterReWrite {
           }
         }
 
-        //? check if its already a variable
-        if (variableStorage.containsKey(line[1])) {
-          //? if it is then update it
+        if (variableStorage.containsKey("input")) {
           variableStorage.replace(line[1], Character.toString(currentPressedKey));
           //System.out.println(variableStorage);
         } else {
-          //? if not then create it
           variableStorage.put(line[1], Character.toString(currentPressedKey));
           //System.out.println(variableStorage);
         }
 
       } else {
 
-        //? if its not getting inputs then create the variable normally
         variableStorage.put(line[1], line[2]);
 
       }
@@ -354,27 +347,20 @@ public class betterReWrite {
 
   }
 
-  //? printing to the console
   public static void handleConsole(String[] line) {
 
     if (line.length == consoleCommExpect) {
 
-      //? if theres a variable called whatever line[1] is then set result to the value of it, if not then sey the error
       String result = (variableStorage.containsKey(line[1])) ? variableStorage.get(line[1]) : "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
 
-      //? check if theres a variable called whatever line[1] is
       if (variableStorage.containsKey(line[1])) {
-        //? if so set result equal to the value of that key (whatever line[1] is)
         result = variableStorage.get(line[1]);
       } else if (line[1].contains("*")) {
-        //? if line[1] contains a * then set result to nothing
         result = "";
       } else {
-        //? else say the error
         result = "variableStorage does not contain the requested key on line: " + Arrays.toString(line);
       }
 
-      //? print the result
       System.out.println(result);
       
     } else {
@@ -383,19 +369,15 @@ public class betterReWrite {
 
   }
 
-  //? math
   public static void handleMath(String[] line) { // example: add (new variable name) -> (var1) (var2)
 
-    //? create a newVariableName String and set it equal to line[1]
     String newVariableName = line[1];
 
-    //? create new String variables and set them equal to line[3] and line[4] respectively
     String sVar1 = line[3];
     String sVar2 = line[4];
 
     if (line.length == mathExpect) {
 
-      //? check if the line contains a math keyword and "->"
       if (line[0].equals(mathKeywords[0]) && line[2].equals("->")) {
 
         //System.out.println("user wants to add");
@@ -484,63 +466,54 @@ public class betterReWrite {
 
   }
 
-  //? "con" statements
   public static boolean handleControlFlow(String[] line) {
     
-    //System.out.println("each line for con: " + Arrays.toString(line));
+    System.out.println("each line for con: " + Arrays.toString(line));
 
-    //? create the two String variables
     String var1 = null;
     String var2 = null;
 
     //System.out.println("v1: " + var1 + "v2: " + var2);
 
-    //? this is what gets returned
     boolean isTrue = false;
 
-    //? checks for a * which indicates ithas something to do with inputs
     if (line[1].contains("*")) {
       //System.out.println("line[1] contains a a *");
 
-      //?  if it is a input then set var1 to the current key pressed
       var1 = Character.toString(currentPressedKey).trim();
-      //? and set var2 to line[3] which is what will be compared to var1
       var2 = line[3];
 
     } else {
-      //? if is not a input then set var1 and var2 to the value of the specified variable
       var1 = variableStorage.get(line[1]);
       var2 = variableStorage.get(line[3]);
     }
 
-    if (var1 != null && var2 != null) { //? check if var1 and var2 exist
+    if (var1 != null && var2 != null) { // check if var1 and var2 exist
       try {
         //System.out.println("both variables are numbers");
-        //? parse the strings to turn them into an int
         int v1I = Integer.parseInt(var1);
         int v2I = Integer.parseInt(var2);
 
-        if (line[2].equals(allowedComparisons[0])) { //? same "="
+        if (line[2].equals(allowedComparisons[0])) { // same "="
           isTrue = (v1I == v2I) ? true : false;
-        } else if (line[2].equals(allowedComparisons[1])) { //? not "!="
+        } else if (line[2].equals(allowedComparisons[1])) { // not "!="
           isTrue = (v1I != v2I) ? true : false;
-        } else if (line[2].equals(allowedComparisons[2])) { //? more ">"
+        } else if (line[2].equals(allowedComparisons[2])) { // more ">"
           isTrue = (v1I > v2I) ? true : false;
-        } else if (line[2].equals(allowedComparisons[3])) { //? less "<"
+        } else if (line[2].equals(allowedComparisons[3])) { // less "<"
           isTrue = (v1I < v2I) ? true : false;
         }
       } catch (NumberFormatException e) {
-        //? compare strings if not numbers
+        // compare strings if not numbers
         System.out.println("var1: " + var1 + " var2 : " + var2);
 
         if (line[2].equals(allowedComparisons[0])) {
 
-          //? if the user used "same" then set isTrue to the result of sending var1 and var2 to compareAlphabet()
           isTrue = compareAlphabet(var1, var2);
           System.out.println("inputs are the same");
 
         } else {
-          //? if inputs are not the same set isTrue to false
+
           isTrue = false;
           System.out.println("inputs are not the same");
 
